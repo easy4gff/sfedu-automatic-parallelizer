@@ -1,1 +1,15 @@
 /* You can add global styles to this file, and also import other style files */
+body {
+    padding: 0px;
+    margin: 0px;
+    height: 10000px;
+}
+
+/*.CodeMirror {
+    border: 1px solid #eee;
+    height: auto;
+  }
+  .CodeMirror-scroll {
+    overflow-y: hidden;
+    overflow-x: auto;
+  }*/
