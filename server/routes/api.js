@@ -1,7 +1,8 @@
+const passport = require('passport');
+
 const express = require('express');
 const router = express.Router();
-// const MongoClient = require('mongodb').MongoClient;
-// const ObjectID = require('mongodb').ObjectID;
+
 var mysql      = require('mysql');
 var connection = mysql.createConnection({
   host     : 'localhost',
@@ -10,7 +11,7 @@ var connection = mysql.createConnection({
   password : '5855633'
 });
 
-const getAvailableOptions = require('../dao/dao');
+const dao = require('../dao/dao');
 
 const availableOptions = require('../parallelizing-options/options');
 
@@ -23,6 +24,8 @@ connection.connect(function(err) {
   console.log('connected as id ' + connection.threadId);
 });
 
+// Auth
+require('../auth/passport-init')(connection);
 
 // Connect
 /*const connection = (closure) => {
@@ -66,8 +69,64 @@ router.get('/users', (req, res) => {
 });*/
 
 router.get('/parallelizing-options', (req, res) => {
-    getAvailableOptions(connection, res);
+    dao.getAvailableOptions(connection, res);
     // res.send(availableOptions);
 });
 
+router.get('/parallelize',
+    passport.authenticationMiddleware(),
+    (req, res) => {
+        res.send({
+            success: true 
+        });
+    }
+);
+
+// router.post('/login',
+//     function (req, res, next) {
+//         console.log(req);
+//         return next();
+//     },
+//     passport.authenticate(),
+//     (req, res) => {
+//         console.log(req);
+//     }
+// );
+
+// router.post('/login', passport.authenticate('local', { successRedirect: '/',
+//                                                     failureRedirect: '/login', }));
+router.post('/login', (req, res, next) => {
+        passport.authenticate('local', (err, user, info) => {
+            if (err) {
+                return next(err);
+            }
+            if (!user) {
+                return res.send({
+                    success: false
+                });
+            }
+            req.logIn(user, function(err) {
+                if (err) {
+                    return next(err);
+                }
+                return next();
+            })
+        })(req, res, next);
+    },
+    (req, res) => {
+        console.log('Recognized');
+        res.send({
+            success: true
+        });
+    }
+);
+
+router.get('/logout',
+    (req, res) => {
+        req.logout();
+        res.send({
+            success: true
+        });
+    }
+);
 module.exports = router;

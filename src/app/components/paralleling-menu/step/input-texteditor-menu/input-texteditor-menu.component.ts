@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { LanguageService } from '../../../../services/language.service';
 import { LanguageConstants } from '../../../../model/language/language-constants';
-import { RoutingConstants } from '../../../routing-utils/routing-constants';
-import { ParallelizingOptionsService } from '../../../../services/parallelizing-options.service';
+import { RoutingConstants } from '../../../../model/routing-utils/routing-constants';
+import { RoutingService } from '../../../../services/routing.service';
 
 @Component({
   selector: 'app-input-texteditor-menu',
@@ -53,16 +53,16 @@ int main()
 }
   `;
 
-  public prevLink = `/${RoutingConstants.INPUT_FILE_METHOD}`;
-  public nextLink = `/${RoutingConstants.DECIPHER_CAPTCHA}`;
+  public prevLink = `../${RoutingConstants.INPUT_FILE_METHOD}`;
+  public nextLink = `../${RoutingConstants.DECIPHER_CAPTCHA}`;
 
   constructor(
     private langService: LanguageService,
-    private optionsService: ParallelizingOptionsService
+    private routingService: RoutingService
   ) { }
 
   ngOnInit() {
-    this.optionsService.redirectHomeIfNoOptionSelected();
+    this.routingService.redirectHomeIfNoOptionSelected();
 
     this.langService.currentLanguage$.subscribe(() => {
       this.labelUserHint = this.langService.get(LanguageConstants.TEXT_EDITOR_MENU_HINT_FOR_USER);

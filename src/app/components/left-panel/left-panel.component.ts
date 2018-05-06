@@ -6,17 +6,12 @@ import { Component, OnInit } from '@angular/core';
       <div id="language-selector-div">
         <app-language-selector></app-language-selector>
       </div>
-      <div class="todo-userinfo-component">
-        Probably future user component
-      </div>
+
+      <app-user-panel></app-user-panel>
+
       <app-navbar></app-navbar>
   `,
   styles: [`
-
-    .todo-userinfo-component {
-      height: 250px;
-      border: 2px solid red;
-    }
 
     #language-selector-div {
       /*height: 100px;

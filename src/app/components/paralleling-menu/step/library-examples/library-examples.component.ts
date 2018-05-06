@@ -3,7 +3,7 @@ import { LanguageService } from '../../../../services/language.service';
 import { LanguageConstants } from '../../../../model/language/language-constants';
 import { SelectItem } from 'primeng/primeng';
 import { ParallelizingOptionsService } from '../../../../services/parallelizing-options.service';
-import { RoutingConstants } from '../../../routing-utils/routing-constants';
+import { RoutingConstants } from '../../../../model/routing-utils/routing-constants';
 import { SourceCodeDialogService } from '../../../../services/source-code-dialog.service';
 import { ParallelizingOptionModel } from '../../../../model/paralleizing-option/parallelizing-option.model';
 import { Router } from '@angular/router';
@@ -43,8 +43,8 @@ import { ParallelizingOptionDataLibraryExampleId } from '../../../../model/paral
 export class LibraryExamplesComponent implements OnInit {
   labelChooseExample: string;
 
-  public prevLink = `/${RoutingConstants.INPUT_FILE_METHOD}`;
-  public nextLink = `/${RoutingConstants.DECIPHER_CAPTCHA}`;
+  public prevLink = `../${RoutingConstants.INPUT_FILE_METHOD}`;
+  public nextLink = `../${RoutingConstants.DECIPHER_CAPTCHA}`;
   public options: SelectItem[];
   public selectedOption: { id: number, code: string };
 

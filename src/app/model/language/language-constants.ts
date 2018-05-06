@@ -79,4 +79,54 @@ export class LanguageConstants {
         english: 'Choose a sample from library',
         russian: 'Выберите пример из библиотеки'
     };
+
+    public static readonly LOG_IN: LanguageObject = {
+        english: 'Log In',
+        russian: 'Авторизация'
+    };
+
+    public static readonly LOG_OUT: LanguageObject = {
+        english: 'Log Out',
+        russian: 'Выйти'
+    };
+
+    public static readonly GUEST: LanguageObject = {
+        english: 'Guest',
+        russian: 'Гость'
+    };
+
+    public static readonly LOG_IN_VERB: LanguageObject = {
+        english: 'Log In',
+        russian: 'Авторизоваться'
+    };
+
+    public static readonly USERNAME: LanguageObject = {
+        english: 'Username',
+        russian: 'Имя пользователя'
+    };
+
+    public static readonly PASSWORD: LanguageObject = {
+        english: 'Password',
+        russian: 'Пароль'
+    };
+
+    public static readonly ERROR_INVALID_LOGIN_PASSWORD: LanguageObject = {
+        english: 'Invalid login or password!',
+        russian: 'Неправильное имя пользователя или пароль!'
+    };
+
+    public static readonly YOU_ARE_AUTHORIZED_AS: LanguageObject = {
+        english: 'You are authorized as',
+        russian: 'Вы авторизованы как'
+    };
+
+    public static readonly ADMINISTRATION_MENU: LanguageObject = {
+        english: 'Administration menu',
+        russian: 'Меню администрирования'
+    };
+
+    public static readonly MANAGE_OPTIONS: LanguageObject = {
+        english: 'Manage options',
+        russian: 'Управление опциями'
+    };
 }

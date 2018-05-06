@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { SelectItem } from 'primeng/components/common/selectitem';
-import { RoutingConstants } from '../../../routing-utils/routing-constants';
+import { RoutingConstants } from '../../../../model/routing-utils/routing-constants';
 import { ParallelizingOptionsService } from '../../../../services/parallelizing-options.service';
 import { LanguageService } from '../../../../services/language.service';
 import { LanguageConstants } from '../../../../model/language/language-constants';
@@ -35,7 +35,7 @@ export class ParallelizingOptionComponent implements OnInit {
   chooseTransformationModeLabel: string;
   nextLabel: string;
 
-  public nextLink = `/${ RoutingConstants.INPUT_FILE_METHOD }`;
+  public nextLink = `../${ RoutingConstants.INPUT_FILE_METHOD }`;
   public options: SelectItem[];
   public selectedOption: { id: string, name: string };
 
@@ -61,6 +61,8 @@ export class ParallelizingOptionComponent implements OnInit {
           };
         });
       });
+
+      console.log('Cookie', document.cookie);
 
 
       if (this.options && this.options.length !== 0) {

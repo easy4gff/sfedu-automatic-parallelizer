@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { SelectItem } from 'primeng/components/common/selectitem';
-import { RoutingConstants } from '../../../routing-utils/routing-constants';
+import { RoutingConstants } from '../../../../model/routing-utils/routing-constants';
 import { ParallelizingOptionsService } from '../../../../services/parallelizing-options.service';
 import { FileInputMethodType } from '../../../../model/paralleizing-option/parallelizing-option.fileinput-method';
 import { LanguageService } from '../../../../services/language.service';
@@ -36,7 +36,7 @@ export class InputFileMethodComponent implements OnInit {
   labelProgramSource: string;
   labelNext: string;
 
-  public prevLink = `/${RoutingConstants.PARALLELIZING_OPTIONS}`;
+  public prevLink = `../${RoutingConstants.PARALLELIZING_OPTIONS}`;
   public nextLink = '';
   public options: SelectItem[];
   public selectedOption: { id: string, name: FileInputMethodType };
@@ -93,7 +93,7 @@ export class InputFileMethodComponent implements OnInit {
         nextRoute = RoutingConstants.CHOOSE_FILE_FROM_LIBRARY;
         break;
     }
-    this.nextLink = `/${nextRoute}`;
+    this.nextLink = `../${nextRoute}`;
   }
 
 }

@@ -50,7 +50,7 @@ function parseOptions(dbResults, resultStream) {
         return val1.id - val2.id;
     })
 
-    console.log('Parsed options:', options);
+    // console.log('Parsed options:', options);
     resultStream.send(options);
 }
 
@@ -62,4 +62,16 @@ function getAvilableOptions(connection, resultStream) {
     });
 }
 
-module.exports = getAvilableOptions;
+function findUserInDB(connection, username, password) {
+    return new Promise((resolve, reject) => {
+        connection.query('SELECT * FROM USERS_VIEW WHERE USERNAME="' + username +'"', function(error, results, fields) {
+            console.log(results);
+            resolve(results[0]);
+        });
+    });
+}
+
+module.exports = {
+    getAvailableOptions: getAvilableOptions,
+    findUserInDB: findUserInDB
+};

@@ -3,6 +3,7 @@ import { LanguageService } from '../../../../services/language.service';
 import { LanguageConstants } from '../../../../model/language/language-constants';
 import { ParallelizingOptionsService } from '../../../../services/parallelizing-options.service';
 import { OptionRequestBuilderService } from '../../../../services/option-request-builder.service';
+import { RoutingService } from '../../../../services/routing.service';
 
 @Component({
   selector: 'app-decipher-captcha',
@@ -28,12 +29,15 @@ export class DecipherCaptchaComponent implements OnInit {
 
   constructor(
     private langService: LanguageService,
-    private optionsService: ParallelizingOptionsService,
-    private optionBuilderService: OptionRequestBuilderService
+    private optionBuilderService: OptionRequestBuilderService,
+    private routingService: RoutingService
   ) {}
 
   ngOnInit() {
-    this.optionsService.redirectHomeIfNoOptionSelected();
+    this.routingService.redirectHomeIfNoOptionSelected();
+    if (!this.optionBuilderService.optionData) {
+      this.routingService.redirectHome();
+    }
 
     this.langService.currentLanguage$.subscribe(() => {
       this.labelUpload = this.langService.get(LanguageConstants.UPLOAD);

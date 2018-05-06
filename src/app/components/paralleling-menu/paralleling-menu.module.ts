@@ -14,7 +14,7 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { FormsModule } from '@angular/forms';
 import { InputFileMethodComponent } from './step/input-file-method/input-file-method.component';
-import { RoutingConstants } from '../routing-utils/routing-constants';
+import { RoutingConstants } from '../../model/routing-utils/routing-constants';
 import { FileUploadComponent } from './step/file-upload/file-upload.component';
 import { DecipherCaptchaComponent } from './step/decipher-captcha/decipher-captcha.component';
 import { InputTexteditorComponent } from './step/input-texteditor/input-texteditor.component';
@@ -25,7 +25,7 @@ import { LibraryExamplesComponent } from './step/library-examples/library-exampl
 import { StepButtonsComponent } from './step/step-buttons/step-buttons.component';
 import { ExampleSourceCodeDialogComponent } from './step/example-source-code-dialog/example-source-code-dialog.component';
 
-const routes: Routes = [
+export const parallizilingMenuRoutes: Routes = [
   { path: '', redirectTo: RoutingConstants.PARALLELIZING_OPTIONS, pathMatch: 'full' },
   { path: RoutingConstants.PARALLELIZING_OPTIONS, component: ParallelizingOptionComponent },
   { path: RoutingConstants.INPUT_FILE_METHOD, component: InputFileMethodComponent },
@@ -40,7 +40,8 @@ const routes: Routes = [
     CommonModule,
     PanelModule,
     ButtonModule,
-    RouterModule.forRoot(routes),
+    RouterModule,
+    // RouterModule.forChild(parallizilingMenuRoutes),
     ListboxModule,
     FormsModule,
     FileUploadModule,
@@ -61,7 +62,8 @@ const routes: Routes = [
   ],
   exports: [
     ParallelingMenuComponent,
-    ExampleSourceCodeDialogComponent
+    ExampleSourceCodeDialogComponent,
+    ParallelizingOptionComponent // Test
   ]
 })
 export class ParallelingMenuModule { }

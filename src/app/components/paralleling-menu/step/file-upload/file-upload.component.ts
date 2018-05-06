@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { RoutingConstants } from '../../../routing-utils/routing-constants';
+import { RoutingConstants } from '../../../../model/routing-utils/routing-constants';
 import { LanguageService } from '../../../../services/language.service';
 import { LanguageConstants } from '../../../../model/language/language-constants';
-import { ParallelizingOptionsService } from '../../../../services/parallelizing-options.service';
+import { RoutingService } from '../../../../services/routing.service';
 
 @Component({
   selector: 'app-file-upload',
@@ -45,16 +45,16 @@ export class FileUploadComponent implements OnInit {
   labelChooseFile: string;
   labelChoose: string;
 
-  public prevLink = `/${ RoutingConstants.INPUT_FILE_METHOD }`;
-  public nextLink = `/${ RoutingConstants.DECIPHER_CAPTCHA }`;
+  public prevLink = `../${ RoutingConstants.INPUT_FILE_METHOD }`;
+  public nextLink = `../${ RoutingConstants.DECIPHER_CAPTCHA }`;
 
   constructor(
     private langService: LanguageService,
-    private optionsService: ParallelizingOptionsService
+    private routingService: RoutingService
   ) { }
 
   ngOnInit() {
-    this.optionsService.redirectHomeIfNoOptionSelected();
+    this.routingService.redirectHomeIfNoOptionSelected();
 
     this.langService.currentLanguage$.subscribe(() => {
       this.labelLoadFile = this.langService.get(LanguageConstants.LOAD_FILE_FROM_FILESYSTEM);

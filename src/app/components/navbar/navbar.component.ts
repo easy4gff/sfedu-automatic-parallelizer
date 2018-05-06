@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { LanguageService } from '../../services/language.service';
 import { LanguageConstants } from '../../model/language/language-constants';
+import { RoutingConstants } from '../../model/routing-utils/routing-constants';
 
 @Component({
   selector: 'app-navbar',
@@ -8,10 +9,10 @@ import { LanguageConstants } from '../../model/language/language-constants';
     <nav id="navbar">
       <ul>
         <li role="presentation">
-          <a href="">{{ homeLabel }}</a>
+          <a [routerLink]="linkHome">{{ homeLabel }}</a>
         </li>
         <li role="presentation">
-          <a href="">{{ documentationLabel }}</a>
+          <a [routerLink]="linkDocumentation">{{ documentationLabel }}</a>
         </li>
       </ul>
     </nav>
@@ -47,6 +48,9 @@ import { LanguageConstants } from '../../model/language/language-constants';
 export class NavbarComponent implements OnInit {
   homeLabel: string;
   documentationLabel: string;
+
+  linkHome = '';
+  linkDocumentation = '';
 
   constructor(private langService: LanguageService) { }
 
