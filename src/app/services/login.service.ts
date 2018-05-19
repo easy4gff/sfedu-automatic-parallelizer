@@ -3,6 +3,7 @@ import { LoginDialogService } from './login-dialog.service';
 import { AppHttpService } from './app-http.service';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { User } from '../model/user/user.model';
+import { AdministrationActivityService } from './administration/administration-activity.service';
 
 @Injectable()
 export class LoginService {
@@ -11,7 +12,8 @@ export class LoginService {
 
   constructor(
     private loginDialogService: LoginDialogService,
-    private httpService: AppHttpService
+    private httpService: AppHttpService,
+    private adminActivityService: AdministrationActivityService
   ) { }
 
   showDialog(): void {
@@ -28,6 +30,8 @@ export class LoginService {
         // this.isLogged$.next(true);
         this.user$.next(new User(username));
         this.hideDialog();
+
+        this.adminActivityService.pullAdminDataFromServer();
       } else {
         this.loginDialogService.showErrInvalidLoginPassword();
       }

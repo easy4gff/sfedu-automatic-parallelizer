@@ -73,6 +73,21 @@ router.get('/parallelizing-options', (req, res) => {
     // res.send(availableOptions);
 });
 
+router.get('/all-parallelizing-options',
+    passport.authenticationMiddleware(),
+    (req, res) => {
+        dao.getAllOptions(connection, res);
+    // res.send(availableOptions);
+    }
+);
+
+router.get('/code-examples',
+    passport.authenticationMiddleware(),
+    (req, res) => {
+        dao.getCodeExamples(connection, res);
+    }
+);
+
 router.get('/parallelize',
     passport.authenticationMiddleware(),
     (req, res) => {

@@ -61,6 +61,12 @@ import { RoutingConstants } from '../../model/routing-utils/routing-constants';
       margin-top: 10px;
       display: flex;
       justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    button {
+      width: 100%;
+      max-width: 200px;
     }
   `]
 })

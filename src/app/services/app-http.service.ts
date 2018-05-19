@@ -4,9 +4,15 @@ import { Observable } from 'rxjs/Observable';
 import { ClientServerMessageLogoutMessage } from '../model/client-server-communication/client-server-messages.model';
 
 const SERVER_API = '/api';
+
 const PARALLELIZING_OPTIONS = '/parallelizing-options';
+const ALL_PARALLELIZING_OPTIONS = '/all-parallelizing-options';
+
+const CODE_EXAMPLES = '/code-examples';
+
 const LOGIN = '/login';
 const LOGOUT = '/logout';
+
 const PARALLELIZE_INPUT = '/parallelize';
 
 @Injectable()
@@ -16,6 +22,14 @@ export class AppHttpService {
 
   public getOptions(): Observable<any> {
     return this.http.get(SERVER_API + PARALLELIZING_OPTIONS);
+  }
+
+  public getAllOptions(): Observable<any> {
+    return this.http.get(SERVER_API + ALL_PARALLELIZING_OPTIONS);
+  }
+
+  public getSourceCodeExamples(): Observable<any> {
+    return this.http.get(SERVER_API + CODE_EXAMPLES);
   }
 
   public logIn(username: string, password: string): Observable<any> {

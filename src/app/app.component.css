@@ -1,5 +1,16 @@
-.left-panel {
-    position: fixed;
-    height: 100%;
-    border: 2px solid black;
+/* @media screen and (min-width: 601px) {
+    .left-panel {
+        position: fixed;
+        display: block;
+        height: 100%;
+        border: 2px solid black;
+    }
 }
+
+@media screen and (max-width: 600px) {
+    .left-panel {
+        display: block;
+        width: 100%;
+        border: 2px solid black;
+    }
+} */

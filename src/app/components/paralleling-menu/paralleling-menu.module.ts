@@ -22,8 +22,8 @@ import { InputTexteditorComponent } from './step/input-texteditor/input-textedit
 import { CodemirrorModule } from 'ng2-codemirror';
 import { InputTexteditorMenuComponent } from './step/input-texteditor-menu/input-texteditor-menu.component';
 import { LibraryExamplesComponent } from './step/library-examples/library-examples.component';
-import { StepButtonsComponent } from './step/step-buttons/step-buttons.component';
 import { ExampleSourceCodeDialogComponent } from './step/example-source-code-dialog/example-source-code-dialog.component';
+import { StepButtonsModule } from '../step-buttons/step-buttons.module';
 
 export const parallizilingMenuRoutes: Routes = [
   { path: '', redirectTo: RoutingConstants.PARALLELIZING_OPTIONS, pathMatch: 'full' },
@@ -46,7 +46,8 @@ export const parallizilingMenuRoutes: Routes = [
     FormsModule,
     FileUploadModule,
     CodemirrorModule,
-    DialogModule
+    DialogModule,
+    StepButtonsModule
   ],
   declarations: [
     ParallelingMenuComponent,
@@ -57,13 +58,12 @@ export const parallizilingMenuRoutes: Routes = [
     InputTexteditorComponent,
     InputTexteditorMenuComponent,
     LibraryExamplesComponent,
-    StepButtonsComponent,
     ExampleSourceCodeDialogComponent
   ],
   exports: [
     ParallelingMenuComponent,
-    ExampleSourceCodeDialogComponent,
-    ParallelizingOptionComponent // Test
+    ExampleSourceCodeDialogComponent
+    // ParallelizingOptionComponent // Test
   ]
 })
 export class ParallelingMenuModule { }

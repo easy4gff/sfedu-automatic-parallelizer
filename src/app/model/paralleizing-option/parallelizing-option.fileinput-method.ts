@@ -1,4 +1,4 @@
-import { LanguageObject } from '../language/language-constants';
+import { LanguageConstant } from '../language/language-constants';
 
 // This values should match the values in database
 export enum FileInputMethodType {
@@ -10,6 +10,6 @@ export enum FileInputMethodType {
 export class FileInputMethod {
     constructor(
         public type: FileInputMethodType,
-        public title: LanguageObject,
+        public title: LanguageConstant,
     ) {}
 }

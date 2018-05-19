@@ -10,6 +10,8 @@ import { ParallelingMenuModule } from './components/paralleling-menu/paralleling
 import { UserPanelModule } from './components/user-panel/user-panel.module';
 import { LoginDialogModule } from './components/login-dialog/login-dialog.module';
 import { AdministrationMenuModule } from './components/administration-menu/administration-menu.module';
+import { StepButtonsModule } from './components/step-buttons/step-buttons.module';
+import { LeftPanelModule } from './components/left-panel/left-panel.module';
 
 // Components
 import { AppComponent } from './app.component';
@@ -17,7 +19,6 @@ import { TopPanelComponent } from './components/top-panel/top-panel.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { MainComponent } from './components/main/main.component';
 import { ParallelingMenuComponent } from './components/paralleling-menu/paralleling-menu.component';
-import { LeftPanelComponent } from './components/left-panel/left-panel.component';
 
 // Services
 import { ParallelizingOptionsService } from './services/parallelizing-options.service';
@@ -30,6 +31,9 @@ import { OptionRequestBuilderService } from './services/option-request-builder.s
 import { LoginDialogService } from './services/login-dialog.service';
 import { LoginService } from './services/login.service';
 import { RoutingService } from './services/routing.service';
+import { AdministrationActivityService } from './services/administration/administration-activity.service';
+import { AdminParallelizingOptionsService } from './services/administration/admin-parallelizing-options.service';
+import { AdminCodeExamplesService } from './services/administration/admin-code-examples.service';
 
 import { Ng2Webstorage } from 'ngx-webstorage';
 
@@ -40,8 +44,7 @@ import { routes } from './app.routes';
     AppComponent,
     TopPanelComponent,
     NavbarComponent,
-    MainComponent,
-    LeftPanelComponent
+    MainComponent
   ],
   imports: [
     BrowserModule,
@@ -53,6 +56,8 @@ import { routes } from './app.routes';
     UserPanelModule,
     LoginDialogModule,
     AdministrationMenuModule,
+    StepButtonsModule,
+    LeftPanelModule,
     RouterModule.forRoot(routes)
   ],
   providers: [
@@ -65,7 +70,10 @@ import { routes } from './app.routes';
     OptionRequestBuilderService,
     LoginDialogService,
     LoginService,
-    RoutingService
+    RoutingService,
+    AdministrationActivityService,
+    AdminParallelizingOptionsService,
+    AdminCodeExamplesService
   ],
   bootstrap: [AppComponent]
 })

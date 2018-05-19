@@ -25,7 +25,7 @@ import { ParallelizingOptionDataLibraryExampleId } from '../../../../model/paral
     <p-button
       *ngIf="this.selectedOption"
       class="ui-md-6 ui-lg-6"
-      [label]="'showSourceCode'"
+      [label]="labelShowSourceCode"
       (click)="showSourceCode()"
     ></p-button>
 
@@ -42,6 +42,7 @@ import { ParallelizingOptionDataLibraryExampleId } from '../../../../model/paral
 })
 export class LibraryExamplesComponent implements OnInit {
   labelChooseExample: string;
+  labelShowSourceCode: string;
 
   public prevLink = `../${RoutingConstants.INPUT_FILE_METHOD}`;
   public nextLink = `../${RoutingConstants.DECIPHER_CAPTCHA}`;
@@ -60,6 +61,7 @@ export class LibraryExamplesComponent implements OnInit {
 
     this.langService.currentLanguage$.subscribe(() => {
       this.labelChooseExample = this.langService.get(LanguageConstants.CHOOSE_FILE_FROM_LIBRARY);
+      this.labelShowSourceCode = this.langService.get(LanguageConstants.SHOW_SOURCE_CODE);
 
       const chosenOption: ParallelizingOptionModel = this.optionsService.getChosenOption(true);
       if (chosenOption) {

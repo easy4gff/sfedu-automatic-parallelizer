@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Language } from '../model/language/language-class';
-import { LanguageConstants, LanguageObject } from '../model/language/language-constants';
+import { LanguageConstants, LanguageConstant } from '../model/language/language-constants';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 @Injectable()
@@ -14,7 +14,7 @@ export class LanguageService {
     });
   }
 
-  public get(langConst: LanguageObject): string {
+  public get(langConst: LanguageConstant): string {
     return langConst[this.currentLanguage];
   }
 

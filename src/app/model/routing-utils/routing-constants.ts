@@ -1,6 +1,11 @@
 
 export class RoutingConstants {
-    // Parallelizing menu constants
+    // Main routes
+    public static readonly PARALLELIZING_PROCESS = 'parallelizing-process';
+    public static readonly DOCUMENTATION = 'documentation';
+    public static readonly ADMINISTRATION_MENU = 'administration-menu';
+
+    // Parallelizing menu routes
     public static readonly PARALLELIZING_OPTIONS = 'parallelizing-options';
     public static readonly INPUT_FILE_METHOD = 'input-file-method';
     public static readonly UPLOAD_CUSTOM_FILE = 'upload-custom-file';
@@ -8,8 +13,10 @@ export class RoutingConstants {
     public static readonly CHOOSE_FILE_FROM_LIBRARY = 'choose-file-from-library';
     public static readonly DECIPHER_CAPTCHA = 'decipher-captcha';
 
-    public static readonly PARALLELIZING_PROCESS = 'parallelizing-process';
-    public static readonly DOCUMENTATION = 'documentation';
-    public static readonly ADMINISTRATION_MENU = 'administration-menu';
+    // Administration menu routes
+    public static readonly CHOOSE_ACTION = 'choose-action';
+    public static readonly ADD_NEW_OPTION = 'add-new-option';
+    public static readonly EDIT_EXISTING_OPTION = 'edit-existing-option';
+    public static readonly OPTION_EDITOR = 'option-editor';
 }
 

@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { LanguageService } from '../../../../services/language.service';
-import { LanguageConstants } from '../../../../model/language/language-constants';
+import { LanguageService } from '../../services/language.service';
+import { LanguageConstants } from '../../model/language/language-constants';
 
 @Component({
   selector: 'app-step-buttons',
@@ -8,8 +8,17 @@ import { LanguageConstants } from '../../../../model/language/language-constants
     <div *ngIf="visible === undefined || visible === true" id="buttons-container" class="ui-g-6 ui-lg-4 ui-sm-12">
       <div id="left-button-container" class="ui-g-6 ui-sm-12">
         <button
+          *ngIf="prevLink"
           pButton
           [routerLink]="[prevLink]"
+          [label]="labelPrev"
+          [disabled]="disabledPrev"
+          (click)="onPrevClick()"
+          style="width: 100%"
+        ></button>
+        <button
+          *ngIf="!prevLink"
+          pButton
           [label]="labelPrev"
           [disabled]="disabledPrev"
           (click)="onPrevClick()"
@@ -18,8 +27,17 @@ import { LanguageConstants } from '../../../../model/language/language-constants
       </div>
       <div id="right-button-container" class="ui-g-6 ui-sm-12">
         <button
+          *ngIf="nextLink"
           pButton
           [routerLink]="[nextLink]"
+          [label]="labelNext"
+          [disabled]="disabledNext"
+          (click)="onNextClick()"
+          style="width: 100%"
+        ></button>
+        <button
+          *ngIf="!nextLink"
+          pButton
           [label]="labelNext"
           [disabled]="disabledNext"
           (click)="onNextClick()"
@@ -49,16 +67,26 @@ import { LanguageConstants } from '../../../../model/language/language-constants
     #right-button-container {
       text-align: left;
     }
+
+    #left-button-container,
+    #right-button-container {
+      height: 100%;
+    }
   `]
 })
 export class StepButtonsComponent implements OnInit {
   labelPrev: string;
   labelNext: string;
 
+  @Input() labelNextStep: string;
+  @Input() labelPrevStep: string;
+
   @Input() prevLink: string;
   @Input() nextLink: string;
+
   @Input() disabledPrev: boolean;
   @Input() disabledNext: boolean;
+
   @Input() visible: boolean;
 
   @Output() prevClick: EventEmitter<null> = new EventEmitter();
@@ -68,8 +96,15 @@ export class StepButtonsComponent implements OnInit {
 
   ngOnInit() {
     this.langService.currentLanguage$.subscribe(() => {
-      this.labelPrev = this.langService.get(LanguageConstants.BACK);
-      this.labelNext = this.langService.get(LanguageConstants.NEXT);
+        this.labelPrev =
+          this.labelPrevStep
+          ? this.labelPrevStep
+          : this.langService.get(LanguageConstants.BACK);
+
+        this.labelNext =
+          this.labelNextStep
+          ? this.labelNextStep
+          : this.langService.get(LanguageConstants.NEXT);
     });
   }
 

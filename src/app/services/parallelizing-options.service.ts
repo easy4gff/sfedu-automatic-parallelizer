@@ -26,16 +26,7 @@ export class ParallelizingOptionsService {
     httpService.getOptions().subscribe((options) => {
       console.log(options);
       this.availableOptions$.next(
-        options.map(option => {
-          return {
-            id: option.id,
-            title: option.title,
-            fileInputsMethods: option.fileInputsMethods.map(method => {
-              return this.fileinputService.getOptionByType(method);
-            }),
-            libraryExamples: option.libraryExamples
-          };
-        }));
+        this.parseOptonResponse(options));
     });
 
     this.chosenOption.subscribe((opt) => {
@@ -53,5 +44,18 @@ export class ParallelizingOptionsService {
   public getChosenOption(performSearchInSessionStorage?: boolean): ParallelizingOptionModel {
     const chosenOpt: ParallelizingOptionModel = this.chosenOption.getValue();
     return chosenOpt || !performSearchInSessionStorage ? chosenOpt : this.sessionService.getChosenOption();
+  }
+
+  public parseOptonResponse(serverResponseOptions: any) {
+    return serverResponseOptions.map(option => {
+      return {
+        id: option.id,
+        title: option.title,
+        fileInputsMethods: option.fileInputsMethods.map(method => {
+          return this.fileinputService.getOptionByType(method);
+        }),
+        libraryExamples: option.libraryExamples
+      };
+    });
   }
 }

@@ -5,6 +5,12 @@ body {
     height: 10000px;
 }
 
+.gs-flex-centered-hv {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 /*.CodeMirror {
     border: 1px solid #eee;
     height: auto;
@@ -13,3 +19,9 @@ body {
     overflow-y: hidden;
     overflow-x: auto;
   }*/
+
+
+  /* Overriding primeng styles */
+  .ui-accordion-header {
+    text-decoration: none !important;
+  }
