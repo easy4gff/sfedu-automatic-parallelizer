@@ -1,8 +1,13 @@
 import { Component, OnInit } from '@angular/core';
+import { LayoutSwitcherService } from '../../services/layout-switcher.service';
 
 @Component({
   selector: 'app-left-panel',
   template: `
+    <p-sidebar
+      [visible]="getVisibility()"
+      [modal]="false"
+    >
       <div id="language-selector-div">
         <app-language-selector></app-language-selector>
       </div>
@@ -10,6 +15,7 @@ import { Component, OnInit } from '@angular/core';
       <app-user-panel></app-user-panel>
 
       <app-navbar></app-navbar>
+    </p-sidebar>
   `,
   styles: [`
 
@@ -22,9 +28,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class LeftPanelComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    private layoutSwitcher: LayoutSwitcherService
+  ) { }
 
   ngOnInit() {
   }
 
+  getVisibility(): boolean {
+    return !this.layoutSwitcher.isMobileLayout();
+  }
 }

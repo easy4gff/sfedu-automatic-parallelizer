@@ -67,6 +67,7 @@ import { RoutingConstants } from '../../model/routing-utils/routing-constants';
     button {
       width: 100%;
       max-width: 200px;
+      margin: 3px 0;
     }
   `]
 })

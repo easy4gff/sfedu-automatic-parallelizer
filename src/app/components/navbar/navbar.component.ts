@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { LanguageService } from '../../services/language.service';
 import { LanguageConstants } from '../../model/language/language-constants';
 import { RoutingConstants } from '../../model/routing-utils/routing-constants';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-navbar',
@@ -16,6 +17,8 @@ import { RoutingConstants } from '../../model/routing-utils/routing-constants';
         </li>
       </ul>
     </nav>
+
+    <h1 *ngIf="isDocumentationPage()">THIS IS GOING TO BE A DOCUMENTATION NAVIGATION<h1>
   `,
   styles: [`
     nav {
@@ -50,15 +53,22 @@ export class NavbarComponent implements OnInit {
   documentationLabel: string;
 
   linkHome = '';
-  linkDocumentation = '';
+  linkDocumentation = `/${RoutingConstants.DOCUMENTATION}`;
 
-  constructor(private langService: LanguageService) { }
+  constructor(
+    private langService: LanguageService,
+    private router: Router
+  ) { }
 
   ngOnInit() {
     this.langService.currentLanguage$.subscribe(() => {
       this.homeLabel = this.langService.get(LanguageConstants.HOME_PAGE);
       this.documentationLabel = this.langService.get(LanguageConstants.DOCUMENTATION);
     });
+  }
+
+  isDocumentationPage(): boolean {
+    return this.router.url.includes(RoutingConstants.DOCUMENTATION);
   }
 
 }

@@ -12,11 +12,11 @@ import { LoginDialogModule } from './components/login-dialog/login-dialog.module
 import { AdministrationMenuModule } from './components/administration-menu/administration-menu.module';
 import { StepButtonsModule } from './components/step-buttons/step-buttons.module';
 import { LeftPanelModule } from './components/left-panel/left-panel.module';
+import { NavbarModule} from './components/navbar/navbar.module';
 
 // Components
 import { AppComponent } from './app.component';
 import { TopPanelComponent } from './components/top-panel/top-panel.component';
-import { NavbarComponent } from './components/navbar/navbar.component';
 import { MainComponent } from './components/main/main.component';
 import { ParallelingMenuComponent } from './components/paralleling-menu/paralleling-menu.component';
 
@@ -34,16 +34,17 @@ import { RoutingService } from './services/routing.service';
 import { AdministrationActivityService } from './services/administration/administration-activity.service';
 import { AdminParallelizingOptionsService } from './services/administration/admin-parallelizing-options.service';
 import { AdminCodeExamplesService } from './services/administration/admin-code-examples.service';
+import { LayoutSwitcherService } from './services/layout-switcher.service';
 
 import { Ng2Webstorage } from 'ngx-webstorage';
 
 import { routes } from './app.routes';
+import { DocumentationModule } from './components/documentation/documentation.module';
 
 @NgModule({
   declarations: [
     AppComponent,
     TopPanelComponent,
-    NavbarComponent,
     MainComponent
   ],
   imports: [
@@ -58,6 +59,8 @@ import { routes } from './app.routes';
     AdministrationMenuModule,
     StepButtonsModule,
     LeftPanelModule,
+    NavbarModule,
+    DocumentationModule,
     RouterModule.forRoot(routes)
   ],
   providers: [
@@ -73,7 +76,11 @@ import { routes } from './app.routes';
     RoutingService,
     AdministrationActivityService,
     AdminParallelizingOptionsService,
-    AdminCodeExamplesService
+    AdminCodeExamplesService,
+    LayoutSwitcherService
+  ],
+  exports: [
+
   ],
   bootstrap: [AppComponent]
 })

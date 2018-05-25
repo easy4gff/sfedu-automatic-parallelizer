@@ -16,9 +16,9 @@ import 'codemirror/mode/clike/clike';
       height: auto !important;
       width: auto !important;
       overflow: visible !important;
-    }
+    }*/
 
-    :host ::ng-deep .CodeMirror-vscrollbar,
+    /*:host ::ng-deep .CodeMirror-vscrollbar,
     :host ::ng-deep .CodeMirror-hscrollbar {
       display: none !important;
     }*/
@@ -38,7 +38,7 @@ export class InputTexteditorComponent implements OnInit {
 
   ngOnInit(): void {
     this.codeToShow = '';
-    this.config = { lineNumbers: true, mode: 'text/x-csrc', readOnly: this.readOnly };
+    this.config = { lineNumbers: true, mode: 'text/x-csrc', readOnly: this.readOnly, height: 'auto' };
   }
 
   reload(): void {

@@ -6,10 +6,11 @@ import { AdministrationMenuComponent } from './components/administration-menu/ad
 
 import { RoutingConstants } from './model/routing-utils/routing-constants';
 import { AdministrationMenuRoutes } from './components/administration-menu/administration-menu.routes';
+import { DocumentationComponent } from './components/documentation/documentation.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: 'parallelizing-process', pathMatch: 'full' },
     { path: RoutingConstants.PARALLELIZING_PROCESS, component: MainComponent, children: parallizilingMenuRoutes },
-    { path: RoutingConstants.DOCUMENTATION, component: MainComponent },
+    { path: RoutingConstants.DOCUMENTATION, component: DocumentationComponent },
     { path: RoutingConstants.ADMINISTRATION_MENU, component: AdministrationMenuComponent, children: AdministrationMenuRoutes }
 ];

@@ -17,7 +17,7 @@ import { InputFileMethodComponent } from './step/input-file-method/input-file-me
 import { RoutingConstants } from '../../model/routing-utils/routing-constants';
 import { FileUploadComponent } from './step/file-upload/file-upload.component';
 import { DecipherCaptchaComponent } from './step/decipher-captcha/decipher-captcha.component';
-import { InputTexteditorComponent } from './step/input-texteditor/input-texteditor.component';
+import { InputTexteditorModule } from './step/input-texteditor/input-texteditor.module';
 
 import { CodemirrorModule } from 'ng2-codemirror';
 import { InputTexteditorMenuComponent } from './step/input-texteditor-menu/input-texteditor-menu.component';
@@ -47,7 +47,8 @@ export const parallizilingMenuRoutes: Routes = [
     FileUploadModule,
     CodemirrorModule,
     DialogModule,
-    StepButtonsModule
+    StepButtonsModule,
+    InputTexteditorModule
   ],
   declarations: [
     ParallelingMenuComponent,
@@ -55,7 +56,6 @@ export const parallizilingMenuRoutes: Routes = [
     InputFileMethodComponent,
     FileUploadComponent,
     DecipherCaptchaComponent,
-    InputTexteditorComponent,
     InputTexteditorMenuComponent,
     LibraryExamplesComponent,
     ExampleSourceCodeDialogComponent
