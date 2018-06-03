@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+// const formidable = require('express-formidable');
 const path = require('path');
 const http = require('http');
 const app = express();
@@ -13,6 +14,7 @@ const RedisConfig = require('./auth/redis-storage.config');
 // Parsers
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false}));
+// app.use(formidable());
 
 // app.use(session({
 //   store: new RedisStore({

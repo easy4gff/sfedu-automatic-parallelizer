@@ -43,7 +43,10 @@ import { DocumentationCodeExamples } from '../../model/documentation/documentati
           {{ getConst(dc.AUTOMATIC_DATA_DISTRIBUTION_FOR_CACHE_MEMORY_EXAMPLE_DESC) }}
         </p>
 
-        <app-input-texteditor [code]="codeExamples.ex1"></app-input-texteditor>
+        <app-input-texteditor
+          [code]="codeExamples.ex1"
+          [readOnly]="true"
+        ></app-input-texteditor>
       </div>
     </p-panel>
   `,

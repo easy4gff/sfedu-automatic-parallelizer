@@ -32,7 +32,7 @@ export class ParallelizingOptionsService {
     this.chosenOption.subscribe((opt) => {
       if (opt) {
         this.sessionService.storeChosenOption(opt);
-        this.curOptionService.currentOptionId = opt.id;
+        this.curOptionService.currentOptionType = opt.id;
       }
     });
   }

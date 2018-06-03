@@ -6,8 +6,8 @@ export class ParallelizingOptionDataSourceCode extends ParallelizingOptionData {
     }
 }
 
-export class ParallelizingOptionDataUserFile extends ParallelizingOptionData {
-    constructor(public encodedFile: string) {
+export class ParallelizingOptionDataUserFiles extends ParallelizingOptionData {
+    constructor(public files: File[]) {
         super();
     }
 }

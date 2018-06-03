@@ -9,6 +9,7 @@ import { ParallelizingOptionModel } from '../../../../model/paralleizing-option/
 import { Router } from '@angular/router';
 import { OptionRequestBuilderService } from '../../../../services/option-request-builder.service';
 import { ParallelizingOptionDataLibraryExampleId } from '../../../../model/paralleizing-option/parallelizing-option-data';
+import { CodeFile } from '../../../../model/library-code-example/library-example-codefile';
 
 @Component({
   selector: 'app-library-examples',
@@ -47,7 +48,7 @@ export class LibraryExamplesComponent implements OnInit {
   public prevLink = `../${RoutingConstants.INPUT_FILE_METHOD}`;
   public nextLink = `../${RoutingConstants.DECIPHER_CAPTCHA}`;
   public options: SelectItem[];
-  public selectedOption: { id: number, code: string };
+  public selectedOption: { id: number, codefiles: CodeFile[] };
 
   constructor(
     private optionsService: ParallelizingOptionsService,
@@ -71,7 +72,7 @@ export class LibraryExamplesComponent implements OnInit {
             label: this.langService.get(sample.label),
             value: {
               id: sample.id, // required for p-listbox
-              code: sample.code
+              codefiles: sample.codefiles
             }
           };
         });
@@ -82,11 +83,10 @@ export class LibraryExamplesComponent implements OnInit {
   }
 
   showSourceCode(): void {
-    this.sourceCodeDialogService.showDialog(this.selectedOption.code);
+    this.sourceCodeDialogService.showDialog(this.selectedOption.codefiles);
   }
 
   changeExampleGlobal(): void {
-    console.log('changeExampleGlobal called');
     this.optBuilderService.optionData = new ParallelizingOptionDataLibraryExampleId(this.selectedOption.id);
   }
 }

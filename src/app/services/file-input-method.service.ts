@@ -1,8 +1,11 @@
 import { Injectable } from '@angular/core';
 import { FileInputMethodType, FileInputMethod } from '../model/paralleizing-option/parallelizing-option.fileinput-method';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 @Injectable()
 export class FileInputMethodService {
+  public currentInputMethodType$: BehaviorSubject<FileInputMethodType> = new BehaviorSubject(null);
+
   public fileInputMethods: FileInputMethod[];
 
   constructor() {

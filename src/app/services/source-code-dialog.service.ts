@@ -1,16 +1,17 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { CodeFile } from '../model/library-code-example/library-example-codefile';
 
 @Injectable()
 export class SourceCodeDialogService {
   public dialogVisible$: BehaviorSubject<boolean> = new BehaviorSubject(false);
-  public codeToShow = '';
+  public codefiles: CodeFile[] = [];
 
   constructor() { }
 
-  showDialog(code: string): void {
+  showDialog(codefiles: CodeFile[]): void {
+    this.codefiles = codefiles;
     this.dialogVisible$.next(true);
-    this.codeToShow = code;
   }
 
 }

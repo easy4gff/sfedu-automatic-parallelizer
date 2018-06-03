@@ -26,15 +26,26 @@ function parseOptions(dbResults, resultStream) {
             curOption.fileInputsMethods.push(result.INPUT_METHOD_ID);
         }
 
-        if (!curOption.libraryExamples.find(example => example.id === result.EXAMPLE_ID)) {
+        let curLibraryExample = curOption.libraryExamples.find(example => example.id === result.EXAMPLE_ID);
+        if (!curLibraryExample) {
             curOption.libraryExamples.push({
                 id: result.EXAMPLE_ID,
                 label: {
                     russian: result.EXAMPLE_TITLE_RUS,
                     english: result.EXAMPLE_TITLE_ENG
                 },
-                code: result.EXAMPLE_CODE
+                codefiles: [{
+                    filename: result.EXAMPLE_FILENAME,
+                    code: result.EXAMPLE_CODE
+                }]
             });
+        } else {
+            if (curLibraryExample.codefiles.find(codefile => codefile.filename === result.EXAMPLE_FILENAME) == undefined) {
+                curLibraryExample.codefiles.push({
+                    filename: result.EXAMPLE_FILENAME,
+                    code: result.EXAMPLE_CODE
+                });
+            }
         }
     });
 
@@ -79,15 +90,26 @@ function parseFullOptions(dbResults, resultStream) {
             curOption.fileInputsMethods.push(result.INPUT_METHOD_ID);
         }
 
-        if (!curOption.libraryExamples.find(example => example.id === result.EXAMPLE_ID)) {
+        let curLibraryExample = curOption.libraryExamples.find(example => example.id === result.EXAMPLE_ID);
+        if (!curLibraryExample) {
             curOption.libraryExamples.push({
                 id: result.EXAMPLE_ID,
                 label: {
                     russian: result.EXAMPLE_TITLE_RUS,
                     english: result.EXAMPLE_TITLE_ENG
                 },
-                code: result.EXAMPLE_CODE
+                codefiles: [{
+                    filename: result.EXAMPLE_FILENAME,
+                    code: result.EXAMPLE_CODE
+                }]
             });
+        } else {
+            if (curLibraryExample.codefiles.find(codefile => codefile.filename === result.EXAMPLE_FILENAME) == undefined) {
+                curLibraryExample.codefiles.push({
+                    filename: result.EXAMPLE_FILENAME,
+                    code: result.EXAMPLE_CODE
+                });
+            }
         }
     });
 
@@ -108,19 +130,47 @@ function parseFullOptions(dbResults, resultStream) {
     resultStream.send(options);
 }
 
+// function parseCodeExamples(results, resultStream) {
+//     resultStream.send(
+//         results.map(res => {
+//             return {
+//                 id : res.ID,
+//                 label: {
+//                     english: res.LABEL_ENG,
+//                     russian: res.LABEL_RUS
+//                 },
+//                 code: res.CODE
+//             };
+//         })
+//     );
+// }
+
 function parseCodeExamples(results, resultStream) {
-    resultStream.send(
-        results.map(res => {
-            return {
-                id : res.ID,
-                label: {
-                    english: res.LABEL_ENG,
-                    russian: res.LABEL_RUS
-                },
+    let resultExamples = [];
+    results.forEach(res => {
+        const example = resultExamples.find(ex => ex.id === res.id);
+        if (example == undefined) {
+            resultExamples.push(
+                {
+                    id : res.ID,
+                    label: {
+                        english: res.LABEL_ENG,
+                        russian: res.LABEL_RUS
+                    },
+                    codefiles: [{
+                        filename: res.FILENAME,
+                        code: res.CODE
+                    }]
+                } 
+            );
+        } else {
+            example.codefiles.push({
+                filename: res.FILENAME,
                 code: res.CODE
-            };
-        })
-    );
+            })
+        }
+    })
+    resultStream.send(resultExamples);
 }
 
 function getAvilableOptions(connection, resultStream) {
@@ -147,19 +197,31 @@ function getCodeExamples(connection, resultStream) {
     })
 }
 
-// FIXME
 function findUserInDB(connection, username, password) {
     return new Promise((resolve, reject) => {
-        connection.query('SELECT * FROM USERS_VIEW WHERE USERNAME="' + username +'"', function(error, results, fields) {
+        connection.query('SELECT * FROM USERS_VIEW WHERE USERNAME=?', [username], function(error, results, fields) {
             console.log(results);
             resolve(results[0]);
         });
     });
 }
 
+function getCommandLineForMethod(connection, optionId) {
+    return new Promise((resolve, reject) => {
+        connection.query('SELECT CMD_LINE FROM OPTIONS_CMD_LINE_VIEW WHERE ID=?', [optionId], function(error, results, fields) {
+            if (error) {
+                throw error;
+            }
+
+            resolve(results[0]);
+        })
+    })
+}
+
 module.exports = {
     getAvailableOptions: getAvilableOptions,
     getAllOptions: getAllOptions,
     getCodeExamples: getCodeExamples,
-    findUserInDB: findUserInDB
+    findUserInDB: findUserInDB,
+    getCommandLineForMethod: getCommandLineForMethod
 };

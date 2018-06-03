@@ -7,6 +7,7 @@ import { LanguageService } from '../../../../services/language.service';
 import { LanguageConstants } from '../../../../model/language/language-constants';
 import { ParallelizingOptionModel } from '../../../../model/paralleizing-option/parallelizing-option.model';
 import { Router } from '@angular/router';
+import { FileInputMethodService } from '../../../../services/file-input-method.service';
 
 @Component({
   selector: 'app-input-file-method',
@@ -25,6 +26,7 @@ import { Router } from '@angular/router';
       <app-step-buttons
         [prevLink]="prevLink"
         [nextLink]="nextLink"
+        (nextClick)="onNext()"
       ></app-step-buttons>
     </p-panel>
   `,
@@ -44,7 +46,8 @@ export class InputFileMethodComponent implements OnInit {
   constructor(
     private optionsService: ParallelizingOptionsService,
     private langService: LanguageService,
-    private router: Router
+    private router: Router,
+    private inputMethodsService: FileInputMethodService
   ) {
 
   }
@@ -96,4 +99,7 @@ export class InputFileMethodComponent implements OnInit {
     this.nextLink = `../${nextRoute}`;
   }
 
+  onNext(): void {
+    this.inputMethodsService.currentInputMethodType$.next(this.selectedOption.name);
+  }
 }

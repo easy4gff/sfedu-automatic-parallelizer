@@ -3,6 +3,8 @@ import { RoutingConstants } from '../../../../model/routing-utils/routing-consta
 import { LanguageService } from '../../../../services/language.service';
 import { LanguageConstants } from '../../../../model/language/language-constants';
 import { RoutingService } from '../../../../services/routing.service';
+import { OptionRequestBuilderService } from '../../../../services/option-request-builder.service';
+import { ParallelizingOptionDataUserFiles } from '../../../../model/paralleizing-option/parallelizing-option-data';
 
 @Component({
   selector: 'app-file-upload',
@@ -15,12 +17,12 @@ import { RoutingService } from '../../../../services/routing.service';
         </div>
         <p-fileUpload
           #upload
-          name="myfile[]"
           url="./upload.php"
           [chooseLabel]="labelChoose"
           [showUploadButton]="false"
           [showCancelButton]="false"
-          (onSelect)="logFiles(upload.files)"
+          [multiple]="true"
+          (onSelect)="setFiles(upload.files)"
         ></p-fileUpload>
       </div>
 
@@ -28,6 +30,7 @@ import { RoutingService } from '../../../../services/routing.service';
         [prevLink]="prevLink"
         [nextLink]="nextLink"
         [disabledNext]="upload.files === undefined || upload.files.length === 0"
+        (nextClick)="onNext()"
       ></app-step-buttons>
     </p-panel>
 
@@ -45,12 +48,15 @@ export class FileUploadComponent implements OnInit {
   labelChooseFile: string;
   labelChoose: string;
 
+  files: File[];
+
   public prevLink = `../${ RoutingConstants.INPUT_FILE_METHOD }`;
   public nextLink = `../${ RoutingConstants.DECIPHER_CAPTCHA }`;
 
   constructor(
     private langService: LanguageService,
-    private routingService: RoutingService
+    private routingService: RoutingService,
+    private optionBuilderService: OptionRequestBuilderService
   ) { }
 
   ngOnInit() {
@@ -63,8 +69,12 @@ export class FileUploadComponent implements OnInit {
     });
   }
 
-  logFiles(files: any[]): void {
+  setFiles(files: File[]): void {
     console.log(files);
+    this.files = files;
   }
 
+  onNext(): void {
+    this.optionBuilderService.optionData = new ParallelizingOptionDataUserFiles(this.files);
+  }
 }

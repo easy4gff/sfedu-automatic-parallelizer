@@ -1,11 +1,13 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { BrowserModule } from '@angular/platform-browser';
 
 import { PanelModule } from 'primeng/panel';
 import { ButtonModule } from 'primeng/button';
 import { ListboxModule } from 'primeng/listbox';
 import { FileUploadModule } from 'primeng/fileupload';
 import { DialogModule } from 'primeng/dialog';
+import { TabViewModule } from 'primeng/tabview';
 
 import { ParallelingMenuComponent } from './paralleling-menu.component';
 import { ParallelizingOptionComponent } from './step/parallelizing-options/parallelizing-options';
@@ -48,7 +50,9 @@ export const parallizilingMenuRoutes: Routes = [
     CodemirrorModule,
     DialogModule,
     StepButtonsModule,
-    InputTexteditorModule
+    InputTexteditorModule,
+    TabViewModule,
+    BrowserModule
   ],
   declarations: [
     ParallelingMenuComponent,

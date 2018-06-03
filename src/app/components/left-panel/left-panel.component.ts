@@ -24,6 +24,12 @@ import { LayoutSwitcherService } from '../../services/layout-switcher.service';
       border: 2px solid red;*/
       margin-bottom: 10px;
     }
+
+    @media screen and (min-width: 1001px) {
+      :host ::ng-deep .ui-sidebar-close {
+        display: none;
+      }
+    }
   `]
 })
 export class LeftPanelComponent implements OnInit {

@@ -1,7 +1,11 @@
 const passport = require('passport');
+const formidable = require('express-formidable');
 
 const express = require('express');
 const router = express.Router();
+
+const AppFilesystemConstants = require('../parallelizer/filesystem-constants').AppFilesystemConstants;
+const ParallelizingUtils = require('../parallelizing-utils/parallelizing-utils').ParallelizingUtils;
 
 var mysql      = require('mysql');
 var connection = mysql.createConnection({
@@ -88,9 +92,15 @@ router.get('/code-examples',
     }
 );
 
-router.get('/parallelize',
-    passport.authenticationMiddleware(),
+router.post('/parallelize',
+    formidable({
+        uploadDir: AppFilesystemConstants.OPS_TOOLS_DIR
+    }),
+    // passport.authenticationMiddleware(),
     (req, res) => {
+        console.log(req.fields);
+        console.log(req.files);
+        ParallelizingUtils.getConvertedFiles(connection, req, res);
         res.send({
             success: true 
         });
