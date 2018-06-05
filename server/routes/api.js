@@ -16,9 +16,9 @@ var mysql      = require('mysql');
 // });
 var connection = mysql.createConnection({
     host     : 'localhost',
-    database : 'db_test',
-    user     : 'testuser',
-    password : 'test'
+    database : 'sfedu_automatic_parallelizer',
+    user     : 'newwebops',
+    password : 'webops'
 });
   
 const dao = require('../dao/dao');
