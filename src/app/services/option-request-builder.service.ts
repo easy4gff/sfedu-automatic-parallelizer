@@ -8,6 +8,7 @@ import {
 import { ParallelizingOptionType } from '../model/paralleizing-option/parallelizing-option-type';
 import { HttpClient } from '@angular/common/http';
 import { FileInputMethodService } from './file-input-method.service';
+import { saveAs as importedSaveAs } from 'file-saver';
 
 const SERVER_API = '/api';
 const SERVICE_CONTROLLER = '/parallelize';
@@ -41,7 +42,14 @@ export class OptionRequestBuilderService {
         'Content-Type': undefined
         }
       }*/
-    ).subscribe(res => console.log(res));
+      , {
+        responseType: 'blob'
+      }
+    ).subscribe(res => {
+      console.log(res);
+      importedSaveAs(res);
+      this.downloadFile(res);
+    });
   }
 
   private preparePayload(formData: FormData): void {
@@ -59,6 +67,12 @@ export class OptionRequestBuilderService {
     } else {
         console.error('Incorrect parallelizing method payload');
     }
+  }
+
+  private downloadFile(data: Object) {
+    const blob = new Blob([data], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    window.open(url);
   }
 
 }

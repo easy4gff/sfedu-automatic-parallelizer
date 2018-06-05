@@ -8,13 +8,19 @@ const AppFilesystemConstants = require('../parallelizer/filesystem-constants').A
 const ParallelizingUtils = require('../parallelizing-utils/parallelizing-utils').ParallelizingUtils;
 
 var mysql      = require('mysql');
+// var connection = mysql.createConnection({
+//   host     : 'localhost',
+//   database : 'sfedu_automatic_parallelizer',
+//   user     : 'root',
+//   password : '5855633'
+// });
 var connection = mysql.createConnection({
-  host     : 'localhost',
-  database : 'sfedu_automatic_parallelizer',
-  user     : 'root',
-  password : '5855633'
+    host     : 'localhost',
+    database : 'db_test',
+    user     : 'testuser',
+    password : 'test'
 });
-
+  
 const dao = require('../dao/dao');
 
 const availableOptions = require('../parallelizing-options/options');
@@ -101,9 +107,9 @@ router.post('/parallelize',
         console.log(req.fields);
         console.log(req.files);
         ParallelizingUtils.getConvertedFiles(connection, req, res);
-        res.send({
-            success: true 
-        });
+        // res.send({
+        //     success: true 
+        // });
     }
 );
 
