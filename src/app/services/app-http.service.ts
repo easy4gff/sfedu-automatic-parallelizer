@@ -28,6 +28,7 @@ export class AppHttpService {
     return this.http.get(SERVER_API + ALL_PARALLELIZING_OPTIONS);
   }
 
+  // TODO pass option id
   public getSourceCodeExamples(): Observable<any> {
     return this.http.get(SERVER_API + CODE_EXAMPLES);
   }

@@ -3,6 +3,7 @@ body {
     padding: 0px;
     margin: 0px;
     height: 10000px;
+    background-color: #F5F7F7;  
 }
 
 .gs-flex-centered-hv {
@@ -21,7 +22,7 @@ body {
   }*/
 
 
-  /* Overriding primeng styles */
-  .ui-accordion-header {
+  /* Overriding primeng styles  FIXME*/
+  a, .ui-accordion-header-text {
     text-decoration: none !important;
   }

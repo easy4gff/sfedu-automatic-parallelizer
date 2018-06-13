@@ -2,6 +2,7 @@
 
 const ParallelizingOption = require('../parallelizing-options/option-model');
 const ParallelizingOptionFull = require('../parallelizing-options/option-full-model');
+const fs = require('fs');
 
 function parseOptions(dbResults, resultStream) {
     let options = [];
@@ -218,10 +219,57 @@ function getCommandLineForMethod(connection, optionId) {
     })
 }
 
+function addLibraryExample(connection, req) {
+    return new Promise((resolve, reject) => {
+        const optionId = req.fields.methodId;
+        const exampleLabelRussian = req.fields.exampleLabelRussian;
+        const exampleLabelEnglish = req.fields.exampleLabelEnglish;
+        connection.query(
+            'SELECT ADD_SOURCE_CODE_EXAMPLE(?, ?, ?, ?) AS EXAMPLE_ID',
+            [exampleLabelRussian, exampleLabelEnglish, optionId, 'ACTIVE'],
+            function(error, results, fields) {
+                if (error) {
+                    throw error;
+                }
+
+                console.log(results);
+                // hot idea!!! define a counter (not the one inside loop and send result when it is equal to files count)
+                let successfulFileInserts = 0;
+                const exampleId = results[0].EXAMPLE_ID;
+                for (let i = 0; i < req.fields.countFiles; ++i) {
+                    // TODO: read files then query
+                    const file = req.files['file' + i];
+                    fs.readFile(file.path, (err, code) => {
+                        if (err) {
+                            throw err;
+                        }
+                        
+                        const filename = file.name;
+                        connection.query(
+                            'CALL ADD_CODE_FILE_FOR_EXAMPLE(?, ?, ?)',
+                            [filename, code, exampleId],
+                            (err, results, fields) => {
+                                successfulFileInserts++;
+                                if (successfulFileInserts === req.fields.countFiles) {
+                                    res.send({
+                                        status: 'OK'
+                                    });
+                                }
+                            }
+                        );
+                    });
+
+                } 
+            }
+        )
+    });
+}
+
 module.exports = {
     getAvailableOptions: getAvilableOptions,
     getAllOptions: getAllOptions,
     getCodeExamples: getCodeExamples,
     findUserInDB: findUserInDB,
-    getCommandLineForMethod: getCommandLineForMethod
+    getCommandLineForMethod: getCommandLineForMethod,
+    addLibraryExample: addLibraryExample
 };

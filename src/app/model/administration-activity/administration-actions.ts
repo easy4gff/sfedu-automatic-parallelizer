@@ -17,6 +17,13 @@ export class AdministrationAction {
                     english: 'Modify existing parallelizing method',
                     russian: 'Изменить уже существующий метод распараллеливания'
                 }
+            ),
+            new AdministrationAction(
+                AdministrationActionType.MANAGE_LIBRARY_EXAMPLES,
+                {
+                    english: 'Mange library examples',
+                    russian: 'Управление примерами из библиотеки'
+                }
             )
         ];
     }

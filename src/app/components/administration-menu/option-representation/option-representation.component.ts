@@ -1,9 +1,12 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { LanguageService } from '../../../services/language.service';
 import { LanguageConstants, LanguageConstant } from '../../../model/language/language-constants';
+import { OptionRepresentationMode } from './option-representation-mode';
 import { SelectItem } from 'primeng/primeng';
 import { FileInputMethodService } from '../../../services/file-input-method.service';
 import { AdminCodeExamplesService } from '../../../services/administration/admin-code-examples.service';
+import 'rxjs/add/operator/filter';
+import { EditExistingOptionService } from '../edit-existing-option/edit-existing-option.service';
 
 @Component({
   selector: 'app-option-representation',
@@ -57,7 +60,7 @@ import { AdminCodeExamplesService } from '../../../services/administration/admin
           ></app-step-buttons>
         </p-accordionTab>
 
-        <p-accordionTab [header]="labelCodeExamples">
+        <p-accordionTab [header]="labelCodeExamples" *ngIf="editMode">
 
           <div class="gs-flex-centered-hv">
               <p-listbox
@@ -71,6 +74,21 @@ import { AdminCodeExamplesService } from '../../../services/administration/admin
               >
               </p-listbox>
           </div>
+          <app-step-buttons
+            (prevClick)="onPrevAccordionTab()"
+            (nextClick)="onNextAccordionTab()"
+          ></app-step-buttons>
+        </p-accordionTab>
+        <p-accordionTab [header]="'Командная строка'">
+          <span style="margin-right: 10px">{{ labelOptionNameRussian }}:</span>
+          <input type="text" pInputText [(ngModel)]="optionNameRussian" />
+
+          <app-step-buttons
+            (prevClick)="onPrevAccordionTab()"
+            (nextClick)="onNextAccordionTab()"
+          ></app-step-buttons>
+        </p-accordionTab>
+        <p-accordionTab [header]="'Расширения производимых файлов'">
           <app-step-buttons
             (prevClick)="onPrevAccordionTab()"
             (nextClick)="onNextAccordionTab()"
@@ -103,6 +121,10 @@ import { AdminCodeExamplesService } from '../../../services/administration/admin
   `]
 })
 export class OptionRepresentationComponent implements OnInit {
+  // TODO mode: edit/new
+  @Input() mode: OptionRepresentationMode;
+  public editMode: boolean;
+
   @Input() selectedInputMethodsIds: number[] = [];
   @Input() selectedCodeExamplesIds: number[] = [];
   @Input() optionNameRussian = '';
@@ -125,15 +147,21 @@ export class OptionRepresentationComponent implements OnInit {
   public availableCodeExamples: SelectItem[];
   public selectedCodeExamples: { id: number }[];
 
+  public labelCommandLineHeader: string;
+  public labelCommandLine: string;
+  public commandLine: string;
+
   public selectedAccordionIndex: number;
 
   constructor(
     private langService: LanguageService,
     private fileInputMethodsService: FileInputMethodService,
-    private adminCodeExamplesService: AdminCodeExamplesService
+    private adminCodeExamplesService: AdminCodeExamplesService,
+    private editExistingOptionService: EditExistingOptionService
   ) { }
 
   ngOnInit() {
+    this.editMode = this.mode === OptionRepresentationMode.EDIT;
     this.selectedInputMethods = this.selectedInputMethodsIds
       .map(id => {
         return {
@@ -148,18 +176,22 @@ export class OptionRepresentationComponent implements OnInit {
         };
       });
 
-    this.adminCodeExamplesService.examples$.subscribe(examples => {
-        this.availableCodeExamples = examples
-          .map(ex => {
-            return {
-              label: this.langService.get(ex.label),
-              value: {
-                id: ex.id
-              }
-            };
-          });
-      }
-    );
+    if (this.editMode) {
+      this.adminCodeExamplesService.examples$.subscribe(examples => {
+          this.availableCodeExamples = examples
+            .filter(example =>
+              this.editExistingOptionService.chosenOption$.getValue().libraryExamples.find(ex => example.id === ex.id) !== undefined)
+            .map(ex => {
+              return {
+                label: this.langService.get(ex.label),
+                value: {
+                  id: ex.id
+                }
+              };
+            });
+        }
+      );
+    }
 
     this.langService.currentLanguage$.subscribe(lang => {
       this.labelChooseOptionName = this.langService.get(LanguageConstants.CHOOSE_OPTION_NAME);

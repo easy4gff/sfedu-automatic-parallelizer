@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
+import { LayoutSwitcherService } from '../../services/layout-switcher.service';
 
 @Component({
   selector: 'app-main',
@@ -10,10 +11,20 @@ import { Component, OnInit } from '@angular/core';
   styles: []
 })
 export class MainComponent implements OnInit {
+  public mobileLayoutActive: boolean;
 
-  constructor() { }
+  constructor(private layoutSwitcher: LayoutSwitcherService) { }
 
   ngOnInit() {
+    this.mobileLayoutActive = this.layoutSwitcher.isMobileLayout();
+    if (this.mobileLayoutActive) {
+      console.log('Mobile layout');
+    }
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event) {
+    console.log('I wonder if I work');
   }
 
 }

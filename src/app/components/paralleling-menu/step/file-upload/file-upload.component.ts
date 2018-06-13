@@ -70,7 +70,6 @@ export class FileUploadComponent implements OnInit {
   }
 
   setFiles(files: File[]): void {
-    console.log(files);
     this.files = files;
   }
 

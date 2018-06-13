@@ -184,4 +184,14 @@ export class LanguageConstants {
         english: 'Add',
         russian: 'Добавить'
     };
+
+    public static readonly ENTER_EXAMPLE_NAME_ENGLISH: LanguageConstant = {
+        english: 'Enter example title in english',
+        russian: 'Введите название примера на английском'
+    };
+
+    public static readonly ENTER_EXAMPLE_NAME_RUSSIAN: LanguageConstant = {
+        english: 'Enter example title in russian',
+        russian: 'Введите название примера на русском'
+    };
 }

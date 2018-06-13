@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { LayoutSwitcherService } from './services/layout-switcher.service';
 
 @Component({
@@ -12,6 +12,9 @@ import { LayoutSwitcherService } from './services/layout-switcher.service';
     <!-- <div class="ui-md-offset-3 ui-md-9 ui-lg-offset-3 ui-lg-9"> -->
     <main>
       <div class="ui-g">
+        <div *ngIf="mobileLayout" class="ui-g-12 no-padding">
+          <app-top-menu></app-top-menu>
+        </div>
         <div class="ui-g-12 ui-md-10 ui-md-offset-1 ui-lg-10 ui-lg-offset-1">
           <app-top-panel></app-top-panel>
         </div>
@@ -26,6 +29,10 @@ import { LayoutSwitcherService } from './services/layout-switcher.service';
     <app-login-dialog></app-login-dialog>
   `,
   styles: [`
+
+    .no-padding {
+      padding: 0px;
+    }
 
     @media screen and (min-width: 1000px) {
       main {
@@ -46,7 +53,17 @@ import { LayoutSwitcherService } from './services/layout-switcher.service';
     } */
   `]
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
+    mobileLayout: boolean;
 
     constructor(private layoutSwitcher: LayoutSwitcherService) {}
+
+    ngOnInit(): void {
+      this.mobileLayout = this.layoutSwitcher.isMobileLayout();
+    }
+
+    @HostListener('window:resize', ['$event'])
+    onResize(event) {
+      this.mobileLayout = this.layoutSwitcher.isMobileLayout();
+    }
 }

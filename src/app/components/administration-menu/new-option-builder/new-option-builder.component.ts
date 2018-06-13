@@ -2,16 +2,21 @@ import { Component, OnInit } from '@angular/core';
 import { LanguageService } from '../../../services/language.service';
 import { LanguageConstants } from '../../../model/language/language-constants';
 import { RoutingConstants } from '../../../model/routing-utils/routing-constants';
+import { OptionRepresentationMode } from '../option-representation/option-representation-mode';
+import { RoutingService } from '../../../services/routing.service';
 
 @Component({
   selector: 'app-new-option-builder',
   template: `
-    <app-option-representation></app-option-representation>
+    <app-option-representation
+      [mode]="representationMode"
+    ></app-option-representation>
 
     <app-step-buttons
       [labelPrevStep]="stepButtonsPrevLabel"
       [labelNextStep]="stepButtonsNextLabel"
       [prevLink]="prevLink"
+      (nextClick)="onNext()"
     >
     </app-step-buttons>
 
@@ -21,11 +26,13 @@ import { RoutingConstants } from '../../../model/routing-utils/routing-constants
 export class NewOptionBuilderComponent implements OnInit {
   public prevLink = `../${RoutingConstants.CHOOSE_ACTION}`;
 
+  representationMode: OptionRepresentationMode = OptionRepresentationMode.NEW;
   stepButtonsPrevLabel: string;
   stepButtonsNextLabel: string;
 
   constructor(
-    private langService: LanguageService
+    private langService: LanguageService,
+    private routingService: RoutingService
   ) {}
 
   ngOnInit() {
@@ -35,4 +42,7 @@ export class NewOptionBuilderComponent implements OnInit {
     });
   }
 
+  onNext(): void {
+    this.routingService.redirectAdminMenu();
+  }
 }

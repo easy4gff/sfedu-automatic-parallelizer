@@ -33,7 +33,7 @@ import { RoutingConstants } from '../../model/routing-utils/routing-constants';
       >
       </button>
 
-      <button
+      <button *ngIf="false"
         pButton
         [label]="'Test session'"
         (click)="test()"

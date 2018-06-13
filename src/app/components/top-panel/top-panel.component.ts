@@ -14,6 +14,7 @@ import { LanguageConstants } from '../../model/language/language-constants';
   styles: [`
         h1 {
           text-align: center;
+          color: crimson;
         }
   `]
 })

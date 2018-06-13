@@ -5,7 +5,9 @@ import { LayoutSwitcherConstants } from '../model/layout-switcher/layout-switche
 export class LayoutSwitcherService {
   layoutConstants: LayoutSwitcherConstants = new LayoutSwitcherConstants();
 
-  constructor() { }
+  constructor() {
+
+  }
 
   isMobileLayout(): boolean {
     return window.innerWidth < this.layoutConstants.SWITCH_TRESHOLD;
@@ -16,5 +18,4 @@ export class LayoutSwitcherService {
            ? 0
            : this.layoutConstants.LEFT_PANEL_WIDTH_DESKTOP;
   }
-
 }

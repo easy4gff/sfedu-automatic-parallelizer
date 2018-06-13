@@ -59,6 +59,9 @@ export class ChooseActionComponent implements OnInit {
       case AdministrationActionType.EDIT_EXISTING_OPTION:
         nextLink = `${ RoutingConstants.EDIT_EXISTING_OPTION }`;
         break;
+      case AdministrationActionType.MANAGE_LIBRARY_EXAMPLES:
+        nextLink = `${ RoutingConstants.MANAGE_LIBRARY_EXAMPLES_OPTION_LIST }`;
+        break;
     }
     return nextLink;
   }

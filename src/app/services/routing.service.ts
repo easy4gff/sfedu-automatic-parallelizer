@@ -30,4 +30,8 @@ export class RoutingService {
   public redirectHome(): void {
     this.router.navigateByUrl('');
   }
+
+  public redirectAdminMenu(): void {
+    this.router.navigateByUrl(RoutingConstants.ADMINISTRATION_MENU);
+  }
 }

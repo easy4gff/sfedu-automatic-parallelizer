@@ -35,17 +35,20 @@ import { AdministrationActivityService } from './services/administration/adminis
 import { AdminParallelizingOptionsService } from './services/administration/admin-parallelizing-options.service';
 import { AdminCodeExamplesService } from './services/administration/admin-code-examples.service';
 import { LayoutSwitcherService } from './services/layout-switcher.service';
+import { SliderMenuService } from './services/slider-menu.service';
 
 import { Ng2Webstorage } from 'ngx-webstorage';
 
 import { routes } from './app.routes';
 import { DocumentationModule } from './components/documentation/documentation.module';
+import { TopMenuComponent } from './components/top-menu/top-menu.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     TopPanelComponent,
-    MainComponent
+    MainComponent,
+    TopMenuComponent
   ],
   imports: [
     BrowserModule,
@@ -77,7 +80,8 @@ import { DocumentationModule } from './components/documentation/documentation.mo
     AdministrationActivityService,
     AdminParallelizingOptionsService,
     AdminCodeExamplesService,
-    LayoutSwitcherService
+    LayoutSwitcherService,
+    SliderMenuService
   ],
   exports: [
 

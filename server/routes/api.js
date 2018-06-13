@@ -98,9 +98,19 @@ router.get('/code-examples',
     }
 );
 
+router.post('/add-library-example',
+    formidable(),
+    passport.authenticationMiddleware(),
+    (req, res) => {
+        console.log(req.fields);
+        console.log(req.files);
+        dao.addLibraryExample(connection, req);
+    }
+)
+
 router.post('/parallelize',
     formidable({
-        uploadDir: AppFilesystemConstants.OPS_TOOLS_DIR
+        uploadDir: AppFilesystemConstants.UPLOAD_DIR
     }),
     // passport.authenticationMiddleware(),
     (req, res) => {
@@ -113,19 +123,6 @@ router.post('/parallelize',
     }
 );
 
-// router.post('/login',
-//     function (req, res, next) {
-//         console.log(req);
-//         return next();
-//     },
-//     passport.authenticate(),
-//     (req, res) => {
-//         console.log(req);
-//     }
-// );
-
-// router.post('/login', passport.authenticate('local', { successRedirect: '/',
-//                                                     failureRedirect: '/login', }));
 router.post('/login', (req, res, next) => {
         passport.authenticate('local', (err, user, info) => {
             if (err) {
