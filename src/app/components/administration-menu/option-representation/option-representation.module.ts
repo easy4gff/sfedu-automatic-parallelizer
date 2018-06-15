@@ -10,6 +10,7 @@ import { InputSwitchModule } from 'primeng/inputswitch';
 import { ListboxModule } from 'primeng/listbox';
 
 import { OptionRepresentationComponent } from './option-representation.component';
+import { ChipsModule } from 'primeng/primeng';
 
 @NgModule({
   imports: [
@@ -19,7 +20,8 @@ import { OptionRepresentationComponent } from './option-representation.component
     FormsModule,
     StepButtonsModule,
     InputSwitchModule,
-    ListboxModule
+    ListboxModule,
+    ChipsModule
   ],
   declarations: [
     OptionRepresentationComponent

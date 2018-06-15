@@ -6,6 +6,7 @@ import { RoutingConstants } from '../../../../model/routing-utils/routing-consta
 import { RoutingService } from '../../../../services/routing.service';
 import { ManageLibraryExamplesService } from '../manage-library-examples.service';
 import { HttpClient } from '@angular/common/http';
+import { AppService } from '../../../../services/app.service';
 
 const SERVER_API = '/api';
 const SERVICE_CONTROLLER = '/add-library-example';
@@ -77,7 +78,8 @@ export class AddExampleComponent implements OnInit, OnDestroy {
     private langService: LanguageService,
     private routingService: RoutingService,
     private http: HttpClient,
-    private manageExamplesService: ManageLibraryExamplesService
+    private manageExamplesService: ManageLibraryExamplesService,
+    private appService: AppService
   ) { }
 
   ngOnInit() {
@@ -113,6 +115,7 @@ export class AddExampleComponent implements OnInit, OnDestroy {
     ).subscribe((response: any) => {
       if (response.status === 'OK') {
         this.routingService.redirectAdminMenu();
+        this.appService.reloadOptions();
       } else {
         console.error('Server error while adding library example!');
       }

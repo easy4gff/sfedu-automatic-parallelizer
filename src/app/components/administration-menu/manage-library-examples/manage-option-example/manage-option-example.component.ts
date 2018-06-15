@@ -5,6 +5,9 @@ import { LanguageService } from '../../../../services/language.service';
 import { ManageLibraryExamplesService } from '../manage-library-examples.service';
 import { RoutingConstants } from '../../../../model/routing-utils/routing-constants';
 import { AdminParallelizingOptionsService } from '../../../../services/administration/admin-parallelizing-options.service';
+import { LibraryExample } from '../../../../model/library-code-example/library-example.model';
+import { LanguageConstant } from '../../../../model/language/language-constants';
+import { ExampleManagementActionType } from '../action-list/action-list-items';
 
 @Component({
   selector: 'app-manage-option-example',
@@ -19,13 +22,14 @@ import { AdminParallelizingOptionsService } from '../../../../services/administr
   <app-step-buttons
     [prevLink]="prevLink"
     [nextLink]="nextLink"
+    (nextClick)="onNext()"
   ></app-step-buttons>
   `,
   styles: []
 })
 export class ManageOptionExampleComponent implements OnInit {
   public optionCodeExamples: SelectItem[] = [];
-  public selectedOption: { id: number };
+  public selectedOption: LibraryExample;
 
   public prevLink = `../${RoutingConstants.CHOOSE_EXAMPLE_ACTION}`;
   public nextLink: string; // EDIT ONLY LABELS AHAHAAH LOL OMG CUNNING ZHEKA
@@ -37,23 +41,6 @@ export class ManageOptionExampleComponent implements OnInit {
     private adminOptionsService: AdminParallelizingOptionsService
   ) { }
 
-  // ngOnInit() {
-  //   this.adminCodeExamplesService.examples$.subscribe(examples => {
-  //     this.optionCodeExamples = examples
-  //       .filter(example =>
-  //         this.manageExamplesService.chosenOption$.getValue().libraryExamples.find(ex => example.id === ex.id) !== undefined)
-  //       .map(ex => {
-  //         return {
-  //           label: this.langService.get(ex.label),
-  //           value: {
-  //             id: ex.id
-  //           }
-  //         };
-  //       });
-  //     }
-  //   );
-  // }
-
   ngOnInit() {
     this.adminOptionsService.options$.subscribe(options => {
       this.optionCodeExamples =
@@ -62,13 +49,29 @@ export class ManageOptionExampleComponent implements OnInit {
                   return {
                     label: this.langService.get(ex.label),
                     value: {
-                      id: ex.id
+                      id: ex.id,
+                      label: ex.label,
+                      codefiles: ex.codefiles
                     }
                   };
                 });
-
       }
     );
+
+    this.manageExamplesService.currentAction$.subscribe(action => {
+      switch (action) {
+        case ExampleManagementActionType.EDIT:
+          this.nextLink = `../${RoutingConstants.EDIT_EXAMPLE_PARAMS}`;
+          break;
+        case ExampleManagementActionType.DELETE:
+          this.nextLink = `../${RoutingConstants.DELETE_LIBRARY_EXAMPLE}`;
+          break;
+      }
+    });
+  }
+
+  onNext(): void {
+    this.manageExamplesService.chosenExample$.next(this.selectedOption);
   }
 
 }

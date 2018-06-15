@@ -12,6 +12,7 @@ import { ManageOptionExampleComponent } from './manage-option-example/manage-opt
 import { ActionListComponent } from './action-list/action-list.component';
 import { AddExampleComponent } from './add-example/add-example.component';
 import { EditExampleComponent } from './edit-example/edit-example.component';
+import { DeleteExampleComponent } from './delete-example/delete-example.component';
 
 @NgModule({
   imports: [
@@ -26,7 +27,8 @@ import { EditExampleComponent } from './edit-example/edit-example.component';
     ManageOptionExampleComponent,
     ActionListComponent,
     AddExampleComponent,
-    EditExampleComponent
+    EditExampleComponent,
+    DeleteExampleComponent
   ],
   providers: [
     ManageLibraryExamplesService

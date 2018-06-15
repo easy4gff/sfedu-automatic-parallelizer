@@ -23,11 +23,7 @@ export class ParallelizingOptionsService {
     private httpService: AppHttpService,
     private curOptionService: OptionRequestBuilderService
   ) {
-    httpService.getOptions().subscribe((options) => {
-      console.log(options);
-      this.availableOptions$.next(
-        this.parseOptonResponse(options));
-    });
+    this.loadOptions();
 
     this.chosenOption.subscribe((opt) => {
       if (opt) {
@@ -56,6 +52,14 @@ export class ParallelizingOptionsService {
         }),
         libraryExamples: option.libraryExamples
       };
+    });
+  }
+
+  public loadOptions(): void {
+    this.httpService.getOptions().subscribe((options) => {
+      console.log(options);
+      this.availableOptions$.next(
+        this.parseOptonResponse(options));
     });
   }
 }

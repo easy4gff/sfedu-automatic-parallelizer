@@ -10,6 +10,8 @@ import { ManageLibraryExamplesModule } from './manage-library-examples/manage-li
 import { PanelModule } from 'primeng/primeng';
 
 import { AdministrationMenuComponent } from './administration-menu.component';
+import { DeleteExistingOptionComponent } from './delete-existing-option/delete-existing-option.component';
+import { StepButtonsModule } from '../step-buttons/step-buttons.module';
 
 @NgModule({
     imports: [
@@ -19,10 +21,12 @@ import { AdministrationMenuComponent } from './administration-menu.component';
         OptionRepresentationModule,
         EditExistingOptionModule,
         NewOptionBuilderModule,
-        ManageLibraryExamplesModule
+        ManageLibraryExamplesModule,
+        StepButtonsModule
     ],
     declarations: [
         AdministrationMenuComponent,
+        DeleteExistingOptionComponent,
     ],
     providers: [
 

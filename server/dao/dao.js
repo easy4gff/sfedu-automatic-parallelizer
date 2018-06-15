@@ -2,6 +2,7 @@
 
 const ParallelizingOption = require('../parallelizing-options/option-model');
 const ParallelizingOptionFull = require('../parallelizing-options/option-full-model');
+const ParallelizingOptionFullDB = require('../parallelizing-options/option-full-db').ParallelizingOptionFullDB;
 const fs = require('fs');
 
 function parseOptions(dbResults, resultStream) {
@@ -81,8 +82,11 @@ function parseFullOptions(dbResults, resultStream) {
                 },
                 [],
                 [],
-                result.STATUS === 'ENABLED'
-            ))
+                result.STATUS === 'ENABLED',
+                [],
+                [],
+                result.CMD_LINE
+            ));
         }
 
         let curOption = options.find(option => option.id === result.ID);
@@ -112,9 +116,20 @@ function parseFullOptions(dbResults, resultStream) {
                 });
             }
         }
+
+        if (result.EXT_TYPE !== undefined) {
+            if (result.EXT_TYPE === 'RESULT') {
+                curOption.resultExtensions.push(result.EXT_STRING);
+            } else {
+                curOption.producingExtensions.push(result.EXT_STRING);
+            }
+        }
     });
 
     options.forEach(option => {
+        option.resultExtensions = option.resultExtensions.filter((v, i, a) => a.indexOf(v) === i);
+        option.producingExtensions = option.producingExtensions.filter((v, i, a) => a.indexOf(v) === i);
+
         option.fileInputsMethods.sort((val1, val2) => {
             return val1.id - val2.id;
         })
@@ -219,27 +234,52 @@ function getCommandLineForMethod(connection, optionId) {
     })
 }
 
+function getExtensionsForMethod(connection, optionId) {
+    return new Promise((resolve, reject) => {
+        connection.query('SELECT EXT_STRING, EXT_TYPE FROM OPTION_EXTENSIONS WHERE OPTION_ID=?', [optionId], function(error, results, fields) {
+            if (error) {
+                throw error;
+            }
+            
+            const extensions = {
+                resulting: [],
+                producing: []
+            };
+
+            results.forEach(resRow => {
+                if (resRow.EXT_TYPE === 'RESULT') {
+                    extensions.resulting.push(resRow.EXT_STRING);
+                } else {
+                    extensions.producing.push(resRow.EXT_STRING);
+                }
+            });
+
+            resolve(extensions);
+        })
+    })
+}
+
+
+
 function addLibraryExample(connection, req) {
     return new Promise((resolve, reject) => {
         const optionId = req.fields.methodId;
         const exampleLabelRussian = req.fields.exampleLabelRussian;
         const exampleLabelEnglish = req.fields.exampleLabelEnglish;
         connection.query(
-            'SELECT ADD_SOURCE_CODE_EXAMPLE(?, ?, ?, ?) AS EXAMPLE_ID',
-            [exampleLabelRussian, exampleLabelEnglish, optionId, 'ACTIVE'],
+            'SELECT ADD_SOURCE_CODE_EXAMPLE(?, ?, ?) AS EXAMPLE_ID',
+            [exampleLabelRussian, exampleLabelEnglish, optionId],
             function(error, results, fields) {
                 if (error) {
                     throw error;
                 }
 
-                console.log(results);
-                // hot idea!!! define a counter (not the one inside loop and send result when it is equal to files count)
                 let successfulFileInserts = 0;
                 const exampleId = results[0].EXAMPLE_ID;
                 for (let i = 0; i < req.fields.countFiles; ++i) {
-                    // TODO: read files then query
+
                     const file = req.files['file' + i];
-                    fs.readFile(file.path, (err, code) => {
+                    fs.readFile(file.path, 'utf8', (err, code) => {
                         if (err) {
                             throw err;
                         }
@@ -249,9 +289,12 @@ function addLibraryExample(connection, req) {
                             'CALL ADD_CODE_FILE_FOR_EXAMPLE(?, ?, ?)',
                             [filename, code, exampleId],
                             (err, results, fields) => {
+                                if (err) {
+                                    throw err;
+                                }
                                 successfulFileInserts++;
-                                if (successfulFileInserts === req.fields.countFiles) {
-                                    res.send({
+                                if (successfulFileInserts == req.fields.countFiles) {
+                                    resolve({
                                         status: 'OK'
                                     });
                                 }
@@ -265,11 +308,281 @@ function addLibraryExample(connection, req) {
     });
 }
 
+function editLibraryExample(connection, req) {
+    return new Promise((resolve, reject) => {
+        connection.query(
+            'CALL EDIT_SOURCE_CODE_EXAMPLE(?, ?, ?)',
+            [
+                req.body.exampleId,
+                req.body.exampleLabelRussian,
+                req.body.exampleLabelEnglish
+            ],
+            (err, results, fields) => {
+                if (err) {
+                    reject({
+                        status: 'ERR'
+                    });
+                } else {
+                    resolve({
+                        status: 'OK'
+                    });
+                }
+            }
+        );
+    });
+}
+
+function deleteLibraryExample(connection, req) {
+    return new Promise((resolve, reject) => {
+        connection.query(
+            'CALL DELETE_SOURCE_CODE_EXAMPLE(?)',
+            [req.body.exampleId],
+            (err, results, fields) => {
+                if (err) {
+                    reject({
+                        status: 'ERR'
+                    });
+                } else {
+                    resolve({
+                        status: 'OK'
+                    });
+                }
+            }
+        );
+    });
+}
+
+function addParallelizingOption(connection, req) {
+    return new Promise((resolve, reject) => {
+        connection.beginTransaction(err => {
+            if (err) {
+                return connection.rollback(function() {
+                    throw err;
+                });
+            }
+
+            const optionModel = new ParallelizingOptionFullDB(req.body.methodModel);
+            connection.query(
+                'SELECT ADD_PARALLELIZING_OPTION(NULL, ?, ?, ?, ?) AS OPTION_ID',
+                [
+                    optionModel.title.russian,
+                    optionModel.title.english,
+                    optionModel.status ? 'ENABLED' : 'DISABLED',
+                    optionModel.commandLine
+                ],
+                (err, results, fields) => {
+                    if (err) {
+                        return connection.rollback(function() {
+                            throw err;
+                        });
+                    }
+
+                    const optionId = results[0].OPTION_ID;
+                    let successfulFileInputsMethodsInserts = 0;
+                    let successfulFileExtensionsInserts = 0;
+                    let allAsyncOperationsCount = optionModel.fileInputsMethodsIds.length + optionModel.extensions.length;                
+                    for (let i = 0; i < optionModel.fileInputsMethodsIds.length; ++i) {
+                        connection.query(
+                            'CALL BIND_FILE_INPUT_METHOD(?, ?)',
+                            [optionId, optionModel.fileInputsMethodsIds[i]],
+                            (err, results, fields) => {
+                                if (err) {
+                                    return connection.rollback(function() {
+                                        throw err;
+                                    });
+                                }
+
+                                successfulFileInputsMethodsInserts++;
+                                if (successfulFileInputsMethodsInserts +
+                                    successfulFileExtensionsInserts === allAsyncOperationsCount) {
+                                    connection.commit(function(err) {
+                                        if (err) {
+                                            return connection.rollback(function() {
+                                            throw err;
+                                            });
+                                        }
+
+                                        resolve({
+                                            status: 'OK'
+                                        });
+                                    });
+                                }
+                            }
+                        )
+                    }
+
+                    for (let i = 0; i < optionModel.extensions.length; ++i) {
+                        connection.query(
+                            'CALL BIND_FILE_EXTENSIONS(?, ?, ?)',
+                            [
+                                optionId,
+                                optionModel.extensions[i].extensionString,
+                                optionModel.extensions[i].extensionType
+                            ],
+                            (err, results, fields) => {
+                                if (err) {
+                                    return connection.rollback(function() {
+                                        throw err;
+                                    });
+                                }
+
+                                successfulFileInputsMethodsInserts++;
+                                if (successfulFileInputsMethodsInserts + successfulFileExtensionsInserts === allAsyncOperationsCount) {
+                                    connection.commit(function(err) {
+                                        if (err) {
+                                          return connection.rollback(function() {
+                                            throw err;
+                                          });
+                                        }
+
+                                        resolve({
+                                            status: 'OK'
+                                        });
+                                    });
+                                    
+                                }
+                            }
+                        )
+                    }
+
+                }
+            )
+        });
+    });
+        
+}
+
+function editParallelizingOption(connection, req) {
+    return new Promise((resolve, reject) => {
+        connection.beginTransaction(err => {
+            if (err) {
+                return connection.rollback(function() {
+                    throw err;
+                });
+            }
+
+            const optionModel = new ParallelizingOptionFullDB(req.body.methodModel);
+            connection.query(
+                'CALL EDIT_PARALLELIZING_OPTION(?, ?, ?, ?, ?)',
+                [
+                    optionModel.id,
+                    optionModel.title.russian,
+                    optionModel.title.english,
+                    optionModel.status ? 'ENABLED' : 'DISABLED',
+                    optionModel.commandLine
+                ],
+                (err, results, fields) => {
+                    if (err) {
+                        return connection.rollback(function() {
+                            throw err;
+                        });
+                    }
+
+                    let successfulFileInputsMethodsInserts = 0;
+                    let successfulFileExtensionsInserts = 0;
+                    let allAsyncOperationsCount = optionModel.fileInputsMethodsIds.length + optionModel.extensions.length;                
+                    for (let i = 0; i < optionModel.fileInputsMethodsIds.length; ++i) {
+                        connection.query(
+                            'CALL BIND_FILE_INPUT_METHOD(?, ?)',
+                            [optionModel.id, optionModel.fileInputsMethodsIds[i]],
+                            (err, results, fields) => {
+                                if (err) {
+                                    return connection.rollback(function() {
+                                        throw err;
+                                    });
+                                }
+
+                                successfulFileInputsMethodsInserts++;
+                                if (successfulFileInputsMethodsInserts +
+                                    successfulFileExtensionsInserts === allAsyncOperationsCount) {
+                                    connection.commit(function(err) {
+                                        if (err) {
+                                            return connection.rollback(function() {
+                                            throw err;
+                                            });
+                                        }
+
+                                        resolve({
+                                            status: 'OK'
+                                        });
+                                    });
+                                }
+                            }
+                        )
+                    }
+
+                    for (let i = 0; i < optionModel.extensions.length; ++i) {
+                        connection.query(
+                            'CALL BIND_FILE_EXTENSIONS(?, ?, ?)',
+                            [
+                                optionModel.id,
+                                optionModel.extensions[i].extensionString,
+                                optionModel.extensions[i].extensionType
+                            ],
+                            (err, results, fields) => {
+                                if (err) {
+                                    return connection.rollback(function() {
+                                        throw err;
+                                    });
+                                }
+
+                                successfulFileInputsMethodsInserts++;
+                                if (successfulFileInputsMethodsInserts + successfulFileExtensionsInserts === allAsyncOperationsCount) {
+                                    connection.commit(function(err) {
+                                        if (err) {
+                                          return connection.rollback(function() {
+                                            throw err;
+                                          });
+                                        }
+
+                                        resolve({
+                                            status: 'OK'
+                                        });
+                                    });
+                                    
+                                }
+                            }
+                        )
+                    }
+
+                }
+            )
+        });
+    });
+        
+}
+
+function deleteParallelizingOption(connection, req) {
+    return new Promise((resolve, reject) => {
+        connection.query(
+            'CALL DELETE_PARALLELIZING_OPTION(?)',
+            [req.body.methodId],
+            function(error, results, fields) {
+                if (error) {
+                    reject({
+                        status: 'ERR'
+                    });
+                }
+                
+                resolve({
+                    status: 'OK'
+                });
+            }
+        );
+    })
+}
+
 module.exports = {
     getAvailableOptions: getAvilableOptions,
     getAllOptions: getAllOptions,
     getCodeExamples: getCodeExamples,
     findUserInDB: findUserInDB,
     getCommandLineForMethod: getCommandLineForMethod,
-    addLibraryExample: addLibraryExample
+    addLibraryExample: addLibraryExample,
+    editLibraryExample: editLibraryExample,
+    deleteLibraryExample: deleteLibraryExample,
+    addParallelizingOption: addParallelizingOption,
+    editParallelizingOption: editParallelizingOption,
+    deleteParallelizingOption: deleteParallelizingOption,
+    getExtensionsForMethod: getExtensionsForMethod
 };

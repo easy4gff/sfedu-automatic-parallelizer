@@ -1,4 +1,5 @@
 export enum OptionRepresentationMode {
     NEW,
-    EDIT
+    EDIT,
+    DELETE
 }

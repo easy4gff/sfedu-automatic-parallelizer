@@ -194,4 +194,41 @@ export class LanguageConstants {
         english: 'Enter example title in russian',
         russian: 'Введите название примера на русском'
     };
+
+    public static readonly SAVE: LanguageConstant = {
+        english: 'Save',
+        russian: 'Сохранить'
+    };
+
+    public static readonly COMMAND_LINE: LanguageConstant = {
+        english: 'Command line',
+        russian: 'Командная строка'
+    };
+
+    public static readonly ENTER_COMMAND_LINE: LanguageConstant = {
+        english: 'Enter command line',
+        russian: 'Введите командную строку'
+    };
+
+    public static readonly PRODUCING_EXTENSIONS: LanguageConstant = {
+        english: 'Producing extensions',
+        russian: 'Производимые расширения'
+    };
+
+    public static readonly RESULT_EXTENSIONS: LanguageConstant = {
+        english: 'Result extensions',
+        russian: 'Расширения файлов результатов'
+    };
+
+    public static readonly DELETE: LanguageConstant = {
+        english: 'Delete',
+        russian: 'Удалить'
+    };
+
+    public static readonly ARE_U_SURE_YOU_WANT_DELETE_METHOD: LanguageConstant = {
+        english: 'Are you sure you want to delete this method?',
+        russian: 'Вы уверены, что хотите удалить этот метод?'
+    };
 }
+
+

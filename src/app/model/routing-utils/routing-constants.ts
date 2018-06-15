@@ -17,10 +17,13 @@ export class RoutingConstants {
     public static readonly CHOOSE_ACTION = 'choose-action';
     public static readonly ADD_NEW_OPTION = 'add-new-option';
     public static readonly EDIT_EXISTING_OPTION = 'edit-existing-option';
+    public static readonly DELETE_EXISTING_OPTION = 'delete-existing-option';
     public static readonly OPTION_EDITOR = 'option-editor';
     public static readonly MANAGE_LIBRARY_EXAMPLES_OPTION_LIST = 'manage-library-examples-option-list';
     public static readonly MANAGE_OPTION_EXAMPLE = 'manage-option-example';
     public static readonly CHOOSE_EXAMPLE_ACTION = 'choose-example-action';
     public static readonly ADD_NEW_LIBRARY_EXAMPLE = 'add-new-library-example';
+    public static readonly EDIT_EXAMPLE_PARAMS = 'edit-example-params';
+    public static readonly DELETE_LIBRARY_EXAMPLE = 'delete-library-example';
 }
 

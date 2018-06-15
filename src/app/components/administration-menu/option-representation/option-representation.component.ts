@@ -7,6 +7,9 @@ import { FileInputMethodService } from '../../../services/file-input-method.serv
 import { AdminCodeExamplesService } from '../../../services/administration/admin-code-examples.service';
 import 'rxjs/add/operator/filter';
 import { EditExistingOptionService } from '../edit-existing-option/edit-existing-option.service';
+import { ParallelizingOptionModel } from '../../../model/paralleizing-option/parallelizing-option.model';
+import { ParallelizingOptionDBModel } from '../../../model/paralleizing-option/parallelizing-option-db.model';
+import { FileExtension, FileExtensionType } from '../../../model/paralleizing-option/parallelizing-option-file-extension';
 
 @Component({
   selector: 'app-option-representation',
@@ -60,7 +63,7 @@ import { EditExistingOptionService } from '../edit-existing-option/edit-existing
           ></app-step-buttons>
         </p-accordionTab>
 
-        <p-accordionTab [header]="labelCodeExamples" *ngIf="editMode">
+        <!--<p-accordionTab [header]="labelCodeExamples" *ngIf="editMode">
 
           <div class="gs-flex-centered-hv">
               <p-listbox
@@ -78,17 +81,35 @@ import { EditExistingOptionService } from '../edit-existing-option/edit-existing
             (prevClick)="onPrevAccordionTab()"
             (nextClick)="onNextAccordionTab()"
           ></app-step-buttons>
-        </p-accordionTab>
-        <p-accordionTab [header]="'Командная строка'">
-          <span style="margin-right: 10px">{{ labelOptionNameRussian }}:</span>
-          <input type="text" pInputText [(ngModel)]="optionNameRussian" />
+        </p-accordionTab> -->
+
+        <p-accordionTab [header]="labelCommandLineHeader">
+          <div class="gs-flex-centered-hv">
+            <span style="margin-right: 10px">{{ labelCommandLine }}:</span>
+            <input type="text" pInputText [(ngModel)]="commandLine" />
+          </div>
 
           <app-step-buttons
             (prevClick)="onPrevAccordionTab()"
             (nextClick)="onNextAccordionTab()"
           ></app-step-buttons>
         </p-accordionTab>
-        <p-accordionTab [header]="'Расширения производимых файлов'">
+
+        <p-accordionTab [header]="labelProducingExtensionsHeader">
+          <div class="gs-flex-centered-hv">
+            <p-chips [(ngModel)]="producingExtensions"></p-chips>
+          </div>
+
+          <app-step-buttons
+            (prevClick)="onPrevAccordionTab()"
+            (nextClick)="onNextAccordionTab()"
+          ></app-step-buttons>
+        </p-accordionTab>
+
+        <p-accordionTab [header]="labelResultExtensionsHeader">
+          <div class="gs-flex-centered-hv">
+            <p-chips [(ngModel)]="resultExtensions"></p-chips>
+          </div>
           <app-step-buttons
             (prevClick)="onPrevAccordionTab()"
             (nextClick)="onNextAccordionTab()"
@@ -125,11 +146,15 @@ export class OptionRepresentationComponent implements OnInit {
   @Input() mode: OptionRepresentationMode;
   public editMode: boolean;
 
+  @Input() id: number; // TODO: pass
   @Input() selectedInputMethodsIds: number[] = [];
   @Input() selectedCodeExamplesIds: number[] = [];
   @Input() optionNameRussian = '';
   @Input() optionNameEnglish = '';
   @Input() optionStatus = false;
+  @Input() producingExtensions: string[] = [];
+  @Input() resultExtensions: string[] = [];
+  @Input() commandLine = '';
 
   public labelChooseOptionName: string;
   public labelOptionNameRussian: string;
@@ -149,7 +174,9 @@ export class OptionRepresentationComponent implements OnInit {
 
   public labelCommandLineHeader: string;
   public labelCommandLine: string;
-  public commandLine: string;
+
+  public labelProducingExtensionsHeader: string;
+  public labelResultExtensionsHeader: string;
 
   public selectedAccordionIndex: number;
 
@@ -206,6 +233,12 @@ export class OptionRepresentationComponent implements OnInit {
 
       this.labelCodeExamples = this.langService.get(LanguageConstants.CODE_EXAMPLES);
 
+      this.labelCommandLineHeader = this.langService.get(LanguageConstants.COMMAND_LINE);
+      this.labelCommandLine = this.langService.get(LanguageConstants.ENTER_COMMAND_LINE);
+
+      this.labelProducingExtensionsHeader = this.langService.get(LanguageConstants.PRODUCING_EXTENSIONS);
+      this.labelResultExtensionsHeader = this.langService.get(LanguageConstants.RESULT_EXTENSIONS);
+
       this.availableInputMethods = this.fileInputMethodsService.fileInputMethods
         .map((inputMethod, ind, arr) => {
           return {
@@ -230,8 +263,29 @@ export class OptionRepresentationComponent implements OnInit {
   onPrevAccordionTab() {
     this.selectedAccordionIndex -= 1;
   }
+
   onNextAccordionTab() {
     this.selectedAccordionIndex += 1;
   }
 
+  getCurrentOptionModel(): ParallelizingOptionDBModel {
+    return {
+      id: this.id,
+      title: {
+        english: this.optionNameEnglish,
+        russian: this.optionNameRussian
+      },
+      fileInputsMethodsIds: this.selectedInputMethods.map(inputMethod => inputMethod.id ),
+      status: this.optionStatus,
+      extensions:
+        this.resultExtensions.map(ext => {
+          return new FileExtension(ext, FileExtensionType.RESULT);
+        }).concat(
+          this.producingExtensions.map(ext => {
+            return new FileExtension(ext, FileExtensionType.OUTPUT);
+          })
+        ),
+      commandLine: this.commandLine
+    };
+  }
 }

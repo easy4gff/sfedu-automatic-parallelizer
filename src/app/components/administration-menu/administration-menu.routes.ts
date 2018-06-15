@@ -9,15 +9,21 @@ import { OptionsListComponent } from './manage-library-examples/options-list/opt
 import { ManageOptionExampleComponent } from './manage-library-examples/manage-option-example/manage-option-example.component';
 import { ActionListComponent } from './manage-library-examples/action-list/action-list.component';
 import { AddExampleComponent } from './manage-library-examples/add-example/add-example.component';
+import { EditExampleComponent } from './manage-library-examples/edit-example/edit-example.component';
+import { DeleteExampleComponent } from './manage-library-examples/delete-example/delete-example.component';
+import { DeleteExistingOptionComponent } from './delete-existing-option/delete-existing-option.component';
 
 export const AdministrationMenuRoutes: Routes = [
     { path: '', redirectTo: RoutingConstants.CHOOSE_ACTION, pathMatch: 'full' },
     { path: RoutingConstants.CHOOSE_ACTION, component: ChooseActionComponent },
     { path: RoutingConstants.ADD_NEW_OPTION, component: NewOptionBuilderComponent },
     { path: RoutingConstants.EDIT_EXISTING_OPTION, component: EditExistingOptionComponent },
+    { path: RoutingConstants.DELETE_EXISTING_OPTION, component: DeleteExistingOptionComponent },
     { path: RoutingConstants.OPTION_EDITOR, component: OptionEditorComponent },
     { path: RoutingConstants.MANAGE_LIBRARY_EXAMPLES_OPTION_LIST, component: OptionsListComponent },
     { path: RoutingConstants.MANAGE_OPTION_EXAMPLE, component: ManageOptionExampleComponent },
     { path: RoutingConstants.CHOOSE_EXAMPLE_ACTION, component: ActionListComponent },
-    { path: RoutingConstants.ADD_NEW_LIBRARY_EXAMPLE, component: AddExampleComponent }
+    { path: RoutingConstants.ADD_NEW_LIBRARY_EXAMPLE, component: AddExampleComponent },
+    { path: RoutingConstants.EDIT_EXAMPLE_PARAMS, component: EditExampleComponent },
+    { path: RoutingConstants.DELETE_LIBRARY_EXAMPLE, component: DeleteExampleComponent }
 ];

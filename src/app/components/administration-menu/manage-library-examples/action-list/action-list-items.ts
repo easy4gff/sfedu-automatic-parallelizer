@@ -2,7 +2,8 @@ import { LanguageConstant } from '../../../../model/language/language-constants'
 
 export enum ExampleManagementActionType {
     ADD,
-    EDIT
+    EDIT,
+    DELETE
 }
 
 export class ActionListItems {
@@ -20,6 +21,13 @@ export class ActionListItems {
                 label: {
                     english: 'Edit existing example',
                     russian: 'Редактировать существующий пример'
+                }
+            },
+            {
+                type: ExampleManagementActionType.DELETE,
+                label: {
+                    english: 'Delete existing example',
+                    russian: 'Удалить существующий пример'
                 }
             }
         ];

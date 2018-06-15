@@ -22,14 +22,17 @@ export class AdminParallelizingOptionsService {
 
   public parseOptonResponse(serverResponseOptions: any) {
     return serverResponseOptions.map(option => {
-      return {
+      return <ParallelizingOptionModel>{
         id: option.id,
         title: option.title,
         fileInputsMethods: option.fileInputsMethods.map(method => {
           return this.fileinputService.getOptionByType(method);
         }),
         libraryExamples: option.libraryExamples,
-        status: option.status
+        status: option.status,
+        producingExtensions: option.producingExtensions,
+        resultExtensions: option.resultExtensions,
+        commandLine: option.commandLine
       };
     });
   }

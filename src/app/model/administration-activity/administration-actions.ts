@@ -19,6 +19,13 @@ export class AdministrationAction {
                 }
             ),
             new AdministrationAction(
+                AdministrationActionType.DELETE_EXISTING_OPTION,
+                {
+                    english: 'Delete existing parallelizing method',
+                    russian: 'Удалить существующий метод распараллеливания'
+                }
+            ),
+            new AdministrationAction(
                 AdministrationActionType.MANAGE_LIBRARY_EXAMPLES,
                 {
                     english: 'Mange library examples',

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { AdminParallelizingOptionsService } from '../../../../services/administration/admin-parallelizing-options.service';
 import { LanguageService } from '../../../../services/language.service';
 import { EditExistingOptionService } from '../edit-existing-option.service';
@@ -6,17 +6,24 @@ import { OptionRepresentationMode } from '../../option-representation/option-rep
 import { RoutingConstants } from '../../../../model/routing-utils/routing-constants';
 import { RoutingService } from '../../../../services/routing.service';
 import { LanguageConstants } from '../../../../model/language/language-constants';
+import { HttpClient } from '@angular/common/http';
+import { OptionRepresentationComponent } from '../../option-representation/option-representation.component';
+import { AppService } from '../../../../services/app.service';
 
 @Component({
   selector: 'app-option-editor',
   template: `
     <app-option-representation
+      [id]="optionId"
       [mode]="representationMode"
       [optionNameEnglish]="optionNameEnglish"
       [optionNameRussian]="optionNameRussian"
       [selectedCodeExamplesIds]="selectedCodeExamplesIds"
       [selectedInputMethodsIds]="selectedInputMethodsIds"
       [optionStatus]="optionStatus"
+      [commandLine]="cmdLine"
+      [resultExtensions]="resultExtensions"
+      [producingExtensions]="producingExtensions"
     >
     </app-option-representation>
 
@@ -30,12 +37,18 @@ import { LanguageConstants } from '../../../../model/language/language-constants
   styles: []
 })
 export class OptionEditorComponent implements OnInit {
+  @ViewChild(OptionRepresentationComponent) representationModel: OptionRepresentationComponent;
+
   representationMode: OptionRepresentationMode = OptionRepresentationMode.EDIT;
   selectedInputMethodsIds: number[] = [];
   selectedCodeExamplesIds: number[] = [];
+  optionId: number;
   optionNameRussian = '';
   optionNameEnglish = '';
   optionStatus = false;
+  cmdLine: string;
+  resultExtensions: string[];
+  producingExtensions: string[];
   labelUpload: string;
   prevLink: string = '../' + RoutingConstants.EDIT_EXISTING_OPTION;
 
@@ -43,7 +56,9 @@ export class OptionEditorComponent implements OnInit {
     private langService: LanguageService,
     private adminOptionService: AdminParallelizingOptionsService,
     private editOptionService: EditExistingOptionService,
-    private routingService: RoutingService
+    private routingService: RoutingService,
+    private http: HttpClient,
+    private appService: AppService
   ) { }
 
   ngOnInit() {
@@ -64,15 +79,29 @@ export class OptionEditorComponent implements OnInit {
 
       this.optionNameEnglish = option.title.english;
       this.optionNameRussian = option.title.russian;
-
+      this.optionId = option.id;
       this.optionStatus = option.status;
+      this.cmdLine = option.commandLine;
+      this.resultExtensions = option.resultExtensions;
+      this.producingExtensions = option.producingExtensions;
     });
   }
 
   onNext(): void {
     // update
-
-    this.routingService.redirectAdminMenu();
+    this.http.post(
+      '/api/edit-parallelizing-method',
+      {
+        methodModel: this.representationModel.getCurrentOptionModel()
+      }
+    ).subscribe((response: any) => {
+      if (response.status === 'OK') {
+        this.routingService.redirectAdminMenu();
+        this.appService.reloadOptions();
+      } else {
+        console.error('Error while modifying parallelizing option');
+      }
+    });
   }
 
 }

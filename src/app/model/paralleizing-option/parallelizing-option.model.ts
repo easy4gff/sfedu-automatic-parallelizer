@@ -12,6 +12,10 @@ export class ParallelizingOptionModel {
     public fileInputsMethods: FileInputMethod[];
     // Примеры из библиотеки примеров исходного кода
     public libraryExamples: LibraryExample[];
+
     // Статус опции
     public status?: boolean;
+    public resultExtensions?: string[];
+    public producingExtensions?: string[];
+    public commandLine?: string;
 }

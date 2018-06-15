@@ -36,6 +36,8 @@ import { AdminParallelizingOptionsService } from './services/administration/admi
 import { AdminCodeExamplesService } from './services/administration/admin-code-examples.service';
 import { LayoutSwitcherService } from './services/layout-switcher.service';
 import { SliderMenuService } from './services/slider-menu.service';
+import { AdminOptionsModificationsOperationsService } from './services/administration/admin-options-modifications-operations.service';
+import { AppService } from './services/app.service';
 
 import { Ng2Webstorage } from 'ngx-webstorage';
 
@@ -81,7 +83,9 @@ import { TopMenuComponent } from './components/top-menu/top-menu.component';
     AdminParallelizingOptionsService,
     AdminCodeExamplesService,
     LayoutSwitcherService,
-    SliderMenuService
+    SliderMenuService,
+    AdminOptionsModificationsOperationsService,
+    AppService
   ],
   exports: [
 

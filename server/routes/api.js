@@ -98,15 +98,99 @@ router.get('/code-examples',
     }
 );
 
+router.post('/edit-library-example',
+    passport.authenticationMiddleware(),
+    (req, res) => {
+        console.log(req.body.exampleId);
+        console.log(req.body.exampleLabelRussian);
+        console.log(req.body.exampleLabelEnglish);
+        dao.editLibraryExample(connection, req)
+           .then(result => {
+               res.send(result);
+           })
+           .catch(error => {
+               res.send(error);
+           });
+    }
+);
+
 router.post('/add-library-example',
     formidable(),
     passport.authenticationMiddleware(),
     (req, res) => {
         console.log(req.fields);
         console.log(req.files);
-        dao.addLibraryExample(connection, req);
+        dao.addLibraryExample(connection, req)
+           .then(result => {
+                res.send(result);  
+           })
+           .catch(err => {
+                res.send({
+                    status: 'ERR'
+                });
+           });
     }
 )
+
+router.post('/delete-library-example',
+    passport.authenticationMiddleware(),
+    (req, res) => {
+        console.log(req.body.exampleId);
+        dao.deleteLibraryExample(connection, req)
+           .then(result => {
+               res.send(result);
+           })
+           .catch(error => {
+               res.send(error);
+           });
+    }
+);
+
+router.post('/add-parallelizing-method',
+    passport.authenticationMiddleware(),
+    (req, res) => {
+        console.log(req.body.methodModel);
+        dao.addParallelizingOption(connection, req)
+           .then(result => {
+               res.send(result);
+           })
+           .catch(error => {
+               res.send({
+                   status: 'ERR'
+               });
+           });
+    }
+);
+
+router.post('/edit-parallelizing-method',
+    passport.authenticationMiddleware(),
+    (req, res) => {
+        console.log(req.body.methodModel);
+        dao.editParallelizingOption(connection, req)
+           .then(result => {
+               res.send(result);
+           })
+           .catch(error => {
+               res.send({
+                   status: 'ERR'
+               });
+           });
+    }
+);
+
+router.post('/delete-parallelizing-method',
+    passport.authenticationMiddleware(),
+    (req, res) => {
+        console.log(req.body.methodId);
+        dao.deleteParallelizingOption(connection, req)
+           .then(result => {
+               res.send(result);
+           })
+           .catch(error => {
+               res.send(error);
+           });
+    }
+);
 
 router.post('/parallelize',
     formidable({
@@ -157,4 +241,5 @@ router.get('/logout',
         });
     }
 );
+
 module.exports = router;

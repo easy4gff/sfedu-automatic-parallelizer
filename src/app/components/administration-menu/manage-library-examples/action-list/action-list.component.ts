@@ -4,6 +4,7 @@ import { ActionListItems, ExampleManagementActionType } from './action-list-item
 import { LanguageService } from '../../../../services/language.service';
 import { Subscription } from 'rxjs/Subscription';
 import { SelectItem } from 'primeng/primeng';
+import { ManageLibraryExamplesService } from '../manage-library-examples.service';
 
 @Component({
   selector: 'app-action-list',
@@ -31,7 +32,10 @@ export class ActionListComponent implements OnInit, OnDestroy {
 
   private langServiceCurrentLanguage$$: Subscription;
 
-  constructor(private langService: LanguageService) { }
+  constructor(
+    private langService: LanguageService,
+    private manageExamplesService: ManageLibraryExamplesService
+  ) { }
 
   ngOnInit() {
     this.langServiceCurrentLanguage$$ = this.langService.currentLanguage$.subscribe(() => {
@@ -57,10 +61,12 @@ export class ActionListComponent implements OnInit, OnDestroy {
         this.nextLink = '../' + RoutingConstants.ADD_NEW_LIBRARY_EXAMPLE;
         break;
       case ExampleManagementActionType.EDIT:
+      case ExampleManagementActionType.DELETE:
         this.nextLink = '../' + RoutingConstants.MANAGE_OPTION_EXAMPLE;
         break;
       default:
         // skip unrecognized types
     }
+    this.manageExamplesService.currentAction$.next(this.selectedOption.id);
   }
 }
