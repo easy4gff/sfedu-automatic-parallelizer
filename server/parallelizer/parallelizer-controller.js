@@ -51,7 +51,7 @@ module.exports.ParallelizerController = class ParallelizerController {
                     shelljs.exec(executionConfiguration.cmdLine, function(status, output) {
                         console.log('Exit status:', status);
                         console.log('Program output:', output);
-                        status = exec(executionConfiguration.cmdLine, { maxBuffer: 1024*1024*1024 }).status;
+                        status = shelljs.exec(executionConfiguration.cmdLine, { maxBuffer: 1024*1024*1024 }).status;
                         console.log('Exit status:', status);
 
                         filenamesToSend = [];
@@ -72,6 +72,8 @@ module.exports.ParallelizerController = class ParallelizerController {
                                 filenamesToSend.push(file.path);
                             }
                         });
+
+                        console.log(filenamesToSend);
 
                         if (filenamesToSend.length > 1) {
                             // zip logic
