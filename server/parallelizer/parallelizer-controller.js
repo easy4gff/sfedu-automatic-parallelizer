@@ -48,17 +48,16 @@ module.exports.ParallelizerController = class ParallelizerController {
                     console.log(fs.existsSync(this.fcConstants.OPS_TOOLS_DIR));
                     console.log(fs.existsSync(this.fcConstants.OPS_TOOLS_DIR + 'WebOPSTool'));
                     // Exec logic
-                    shelljs.exec(executionConfiguration.cmdLine, function(status, output) {
-                        console.log('Exit status:', status);
-                        console.log('Program output:', output);
+                    require('child_process').exec(executionConfiguration.cmdLine, function puts(error, stdout, stderr) {                    
+                    // shelljs.exec(executionConfiguration.cmdLine, function(status, output) {
+                        // console.log('Exit status:', status);
+                        // console.log('Program output:', output);
                         // status = shelljs.exec(executionConfiguration.cmdLine, { maxBuffer: 1024*1024*1024 }).status;
                         // console.log('Exit status:', status);
 
-                        require('child_process').exec(executionConfiguration.cmdLine, function puts(error, stdout, stderr) {
-                            console.log('stdout: ' + stdout);
-                            console.log('stderr: ' + stderr);
-                            console.log('error: ' + error);                            
-                        });
+                        console.log('stdout: ' + stdout);
+                        console.log('stderr: ' + stderr);
+                        console.log('error: ' + error);                            
 
                         filenamesToSend = [];
                         files.forEach(file => {
