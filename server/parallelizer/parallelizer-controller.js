@@ -54,7 +54,11 @@ module.exports.ParallelizerController = class ParallelizerController {
                         // status = shelljs.exec(executionConfiguration.cmdLine, { maxBuffer: 1024*1024*1024 }).status;
                         // console.log('Exit status:', status);
 
-                        require('child_process').execSync(executionConfiguration.cmdLine, function puts(error, stdout, stderr) { console.log(stdout) });
+                        require('child_process').execSync(executionConfiguration.cmdLine, function puts(error, stdout, stderr) {
+                            console.log('stdout: ' + stdout);
+                            console.log('stderr: ' + stderr);
+                            console.log('error: ' + error);                            
+                        });
 
                         filenamesToSend = [];
                         files.forEach(file => {
