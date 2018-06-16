@@ -69,12 +69,15 @@ module.exports.ParallelizerController = class ParallelizerController {
                                         found = true;
                                         filenamesBeforeModification.push(file.path);
                                     }
-                                    
+                                    console.log('Found: ' + outputPath);
                                     filenamesToSend.push(outputPath);
+                                } else {
+                                    console.log('Not found: ' + outputPath);                                    
                                 }
                             }
                             if (!found) {
                                 filenamesToSend.push(file.path);
+                                
                             }
                         });
 
