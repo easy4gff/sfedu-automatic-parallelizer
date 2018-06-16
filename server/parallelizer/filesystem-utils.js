@@ -18,27 +18,27 @@ module.exports.FilesystemUtils = class FilesystemUtils {
     }
 
     static cleanFiles(files, filenamesToSend, filenameBeforeModifications, producingExtensions) {
-        filenamesToSend.forEach(filename => {
-            fs.unlink(filename, (err) => {
-                if (err) console.error(err);
-            });
-        })
+        // filenamesToSend.forEach(filename => {
+        //     fs.unlink(filename, (err) => {
+        //         if (err) console.error(err);
+        //     });
+        // })
 
-        filenameBeforeModifications.forEach(filename => {
-            fs.unlink(filename, (err) => {
-                if (err) console.error(err);
-            });
-        })
+        // filenameBeforeModifications.forEach(filename => {
+        //     fs.unlink(filename, (err) => {
+        //         if (err) console.error(err);
+        //     });
+        // })
 
-        files.forEach(file => {
-            producingExtensions.forEach((val, index, arr) => {
-                const produced = file.path + val;
-                if (fs.existsSync(produced)) {
-                    fs.unlink(produced, (err) => {
-                        if (err) console.error(err);
-                    });
-                }
-            }) 
-        })
+        // files.forEach(file => {
+        //     producingExtensions.forEach((val, index, arr) => {
+        //         const produced = file.path + val;
+        //         if (fs.existsSync(produced)) {
+        //             fs.unlink(produced, (err) => {
+        //                 if (err) console.error(err);
+        //             });
+        //         }
+        //     }) 
+        // })
     }
 }
