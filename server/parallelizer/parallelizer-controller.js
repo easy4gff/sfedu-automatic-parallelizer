@@ -1,3 +1,4 @@
+require('shelljs/global');
 const AppFilesystemConstants = require('./filesystem-constants').AppFilesystemConstants;
 const dao = require('../dao/dao');
 const fs = require('fs');
@@ -25,6 +26,11 @@ module.exports.ParallelizerController = class ParallelizerController {
            })
            .then(() => {
                 console.log(executionConfiguration);
+                exec(executionConfiguration.cmdLine, function(status, output) {
+                    console.log('Exit status:', status);
+                    console.log('Program output:', output);
+                });
+
                 // let files = [];
                 if (false)
                     for (let i = 0; i < filenames.length; ++i) {
