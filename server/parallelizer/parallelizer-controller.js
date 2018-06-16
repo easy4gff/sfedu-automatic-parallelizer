@@ -44,23 +44,22 @@ module.exports.ParallelizerController = class ParallelizerController {
             })
             .then(() => {
                     console.log(executionConfiguration);
-
-                    
+        
                     console.log(fs.existsSync(this.fcConstants.OPS_TOOLS_DIR));
                     console.log(fs.existsSync(this.fcConstants.OPS_TOOLS_DIR + 'WebOPSTool'));
                     // Exec logic
                     shelljs.exec(executionConfiguration.cmdLine, function(status, output) {
                         console.log('Exit status:', status);
                         console.log('Program output:', output);
-                        // status = exec(executionConfiguration, { maxBuffer: 1024*1024 }).status;
-                        // console.log('Exit status:', status);
+                        status = exec(executionConfiguration.cmdLine, { maxBuffer: 1024*1024*1024 }).status;
+                        console.log('Exit status:', status);
 
                         filenamesToSend = [];
                         files.forEach(file => {
                             let found = false;
                             for (let i = 0; i < executionConfiguration.extensions.resulting.length; ++i) {
                                 const outputPath = file.path + executionConfiguration.extensions.resulting[i];
-                                if (fs.exists(outputPath)) {
+                                if (fs.existsSync(outputPath)) {
                                     if (!found) {
                                         found = true;
                                         filenamesBeforeModification.push(file.path);

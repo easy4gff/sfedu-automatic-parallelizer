@@ -33,7 +33,7 @@ module.exports.FilesystemUtils = class FilesystemUtils {
         files.forEach(file => {
             producingExtensions.forEach((val, index, arr) => {
                 const produced = file.path + val;
-                if (fs.exists(produced)) {
+                if (fs.existsSync(produced)) {
                     fs.unlink(produced, (err) => {
                         if (err) console.error(err);
                     });
