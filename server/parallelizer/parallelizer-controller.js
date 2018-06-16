@@ -1,4 +1,5 @@
-require('shelljs/global');
+// require('shelljs/global');
+const shelljs = require('shelljs')
 const AppFilesystemConstants = require('./filesystem-constants').AppFilesystemConstants;
 const FilesystemUtils = require('./filesystem-utils').FilesystemUtils;
 const dao = require('../dao/dao');
@@ -44,12 +45,15 @@ module.exports.ParallelizerController = class ParallelizerController {
             .then(() => {
                     console.log(executionConfiguration);
 
+                    
+                    console.log(fs.existsSync(this.fcConstants.OPS_TOOLS_DIR));
+                    console.log(fs.existsSync(this.fcConstants.OPS_TOOLS_DIR + 'WebOPSTool'));
                     // Exec logic
-                    exec(executionConfiguration.cmdLine, function(status, output) {
+                    shelljs.exec(executionConfiguration.cmdLine, function(status, output) {
                         console.log('Exit status:', status);
                         console.log('Program output:', output);
-                        status = exec(executionConfiguration, { maxBuffer: 1024*1024 }).status;
-                        console.log('Exit status:', status);
+                        // status = exec(executionConfiguration, { maxBuffer: 1024*1024 }).status;
+                        // console.log('Exit status:', status);
 
                         filenamesToSend = [];
                         files.forEach(file => {
