@@ -36,19 +36,15 @@ export class OptionRequestBuilderService {
       optionTypeId: this.currentOptionType,
       optionData: this.optionData
     }*/
-      formData/*,
-      {
-        headers: {
-        'Content-Type': undefined
-        }
-      }*/
-      , {
-        responseType: 'blob'
-      }
-    ).subscribe(res => {
+      formData,
+      // {
+      //   responseType: 'blob'
+      // }
+    ).subscribe((res: any) => {
       console.log(res);
-      importedSaveAs(res);
-      this.downloadFile(res);
+      const blob = this.base64ToBlob(res.file);
+      importedSaveAs(blob, res.filename);
+      this.downloadFile(blob);
     });
   }
 
@@ -73,6 +69,22 @@ export class OptionRequestBuilderService {
     const blob = new Blob([data], { type: 'text/csv' });
     const url = window.URL.createObjectURL(blob);
     window.open(url);
+  }
+
+  base64ToBlob(base64: string): Blob {
+    const contentType = base64.split(';')[0];
+
+    const byteCharacters = atob(base64);
+
+    const byteNumbers = new Array(byteCharacters.length);
+
+    for (let i = 0; i < byteCharacters.length; i++) {
+        byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+
+    const byteArray = new Uint8Array(byteNumbers);
+
+    return new Blob([byteArray], {type: contentType});
   }
 
 }

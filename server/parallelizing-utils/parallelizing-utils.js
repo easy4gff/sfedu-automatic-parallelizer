@@ -10,7 +10,10 @@ exports.ParallelizingUtils = class ParallelizingUtils {
                 ParallelizerController.parallelize(
                     connection,
                     Object.keys(req.files).map(key => {
-                        return req.files[key].path
+                        return {
+                            path: req.files[key].path,
+                            filename: req.files[key].name
+                        };
                     }),
                     req.fields.optionTypeId,
                     resStream

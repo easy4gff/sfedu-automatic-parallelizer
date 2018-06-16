@@ -5,7 +5,7 @@ import { LanguageConstants } from '../../model/language/language-constants';
 @Component({
   selector: 'app-step-buttons',
   template: `
-    <div *ngIf="visible === undefined || visible === true" id="buttons-container" class="ui-g-6 ui-lg-4 ui-sm-12">
+    <div *ngIf="visible === undefined || visible === true" id="buttons-container" class="ui-g-6 ui-lg-4 ui-sm-12 btn-container">
       <div id="left-button-container" class="ui-g-6 ui-sm-12">
         <button
           *ngIf="prevLink"
@@ -71,7 +71,15 @@ import { LanguageConstants } from '../../model/language/language-constants';
     #left-button-container,
     #right-button-container {
       height: 100%;
+      min-width: 120px;
     }
+
+    @media screen and (min-width: 400px) {
+      .btn-container {
+          min-width: 300px;
+      }
+    }
+
   `]
 })
 export class StepButtonsComponent implements OnInit {
@@ -114,5 +122,14 @@ export class StepButtonsComponent implements OnInit {
 
   onNextClick(): void {
     this.nextClick.emit(null);
+  }
+
+  getTextWidth(text) {
+    // re-use canvas object for better performance
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d');
+    context.font = '16px';
+    const metrics = context.measureText(text);
+    return metrics.width;
   }
 }
