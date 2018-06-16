@@ -17,7 +17,7 @@ module.exports.ParallelizerController = class ParallelizerController {
         // dao call for a command line
         dao.getCommandLineForMethod(connection, optionId)
            .then(resultRow => {
-                executionConfiguration.cmdLine = `.${this.fcConstants.OPS_TOOLS_DIR}${resultRow.CMD_LINE} ${filenames.join(' ')}`;
+                executionConfiguration.cmdLine = `${this.fcConstants.OPS_TOOLS_DIR}${resultRow.CMD_LINE} ${filenames.join(' ')}`;
                 console.log(executionConfiguration.cmdLine);
                 return dao.getExtensionsForMethod(connection, optionId);
            })
