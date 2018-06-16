@@ -48,6 +48,8 @@ module.exports.ParallelizerController = class ParallelizerController {
                     exec(executionConfiguration.cmdLine, function(status, output) {
                         console.log('Exit status:', status);
                         console.log('Program output:', output);
+                        status = exec(executionConfiguration, { maxBuffer: 1024*1024 }).status;
+                        console.log('Exit status:', status);
 
                         filenamesToSend = [];
                         files.forEach(file => {
