@@ -48,7 +48,7 @@ module.exports.ParallelizerController = class ParallelizerController {
                     console.log(fs.existsSync(this.fcConstants.OPS_TOOLS_DIR));
                     console.log(fs.existsSync(this.fcConstants.OPS_TOOLS_DIR + 'WebOPSTool'));
                     // Exec logic
-                    require('child_process').exec(executionConfiguration.cmdLine, function puts(error, stdout, stderr) {                    
+                    require('child_process').exec(/*executionConfiguration.cmdLine*/'npm -v', function puts(error, stdout, stderr) {                    
                     // shelljs.exec(executionConfiguration.cmdLine, function(status, output) {
                         // console.log('Exit status:', status);
                         // console.log('Program output:', output);
