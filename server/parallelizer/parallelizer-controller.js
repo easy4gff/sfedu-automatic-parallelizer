@@ -57,7 +57,8 @@ module.exports.ParallelizerController = class ParallelizerController {
 
                         console.log('stdout: ' + stdout);
                         console.log('stderr: ' + stderr);
-                        console.log('error: ' + error);                            
+                        console.log('error: ' + error); 
+                        console.log('Working dir: ' + process.cwd());                           
 
                         filenamesToSend = [];
                         files.forEach(file => {
