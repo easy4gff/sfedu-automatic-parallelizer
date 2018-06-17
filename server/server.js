@@ -61,4 +61,4 @@ const server = http.createServer(app);
 
 server.listen(port, () => console.log(`Running on localhost:${port}`));
 
-process.chdir(require('./parallelizer/filesystem-constants').AppFilesystemConstants.UPLOAD_DIR);
+process.chdir(require('./parallelizer/filesystem-constants').AppFilesystemConstants.RESULTS_WORKING_DIR);

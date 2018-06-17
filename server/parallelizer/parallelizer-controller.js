@@ -20,7 +20,7 @@ module.exports.ParallelizerController = class ParallelizerController {
         return new Buffer(bitmap).toString('base64');
     }
 
-    static parallelize(connection, files, optionId, outStream) {
+    static parallelize(connection, files, destFolder, optionId, outStream) {
 
         const executionConfiguration = {
             cmdLine: null,
@@ -64,7 +64,7 @@ module.exports.ParallelizerController = class ParallelizerController {
                         files.forEach(file => {
                             let found = false;
                             for (let i = 0; i < executionConfiguration.extensions.resulting.length; ++i) {
-                                const outputPath = file.path + executionConfiguration.extensions.resulting[i];
+                                const outputPath = ParallelizerController.fcConstants.RESULTS_WORKING_DIR + file.filename + executionConfiguration.extensions.resulting[i];
                                 if (fs.existsSync(outputPath)) {
                                     if (!found) {
                                         found = true;

@@ -1,8 +1,26 @@
 const fs = require('fs');
 const AppFilesystemConstants = require('./filesystem-constants').AppFilesystemConstants;
 const dao = require('../dao/dao');
+const shelljs = require('shelljs');
 
 module.exports.FilesystemUtils = class FilesystemUtils {
+
+    static prepareFilesDir(filenames) {
+        return new Promise((resolve, reject) => {
+            const dirname = AppFilesystemConstants.UPLOAD_DIR + require('randomstring').generate({ charset: 'alphanumeric'});
+            shelljs.mkdir(dirname);
+            for (let i = 0; i < filenames.length; ++i) {
+                const newPath = dirname + '/' + filenames[i].filename;
+                shelljs.mv(filenames[i].path, newPath);
+                filenames[i].path = newPath;
+            }
+
+            resolve({
+                destFolder: dirname,
+                filenames: filenames
+            });
+        });
+    }
 
     static makeFileFromCodeString(connection, req, code, resStream) {
         return new Promise((resolve, reject) => {
@@ -15,7 +33,7 @@ module.exports.FilesystemUtils = class FilesystemUtils {
                     reject(err);
                 }
                 resolve({
-                    filename: 'main_' + new Date() + '_',
+                    filename: 'main_' + new Date() + '.c',
                     path: filename
                 });
             });
@@ -33,10 +51,12 @@ module.exports.FilesystemUtils = class FilesystemUtils {
                        });
                    }
 
+                   const dirname = AppFilesystemConstants.UPLOAD_DIR + require('randomstring').generate({ charset: 'alphanumeric'});
+                   shelljs.mkdir(dirname); 
                    let filenames = [];
                    let countSuccessfullWrittenFiles = 0;
                    for (let i = 0; i < example.codefiles.length; ++i) {
-                       const filename = AppFilesystemConstants.UPLOAD_DIR + require('randomstring').generate({ charset: 'alphanumeric'});
+                       const filename = dirname + '/' + example.codefiles[i].filename;
                        const code = example.codefiles[i].code;
                        try {
                             fs.writeFile(filename, code, (err) => {
@@ -49,9 +69,10 @@ module.exports.FilesystemUtils = class FilesystemUtils {
 
                                 countSuccessfullWrittenFiles++;
                                 if (countSuccessfullWrittenFiles === example.codefiles.length) {
-                                    resolve(
-                                        filenames
-                                    );
+                                    resolve({
+                                        filenames: filenames,
+                                        destFolder: dirname
+                                    });
                                 }
                             }); 
                         }
@@ -65,6 +86,7 @@ module.exports.FilesystemUtils = class FilesystemUtils {
         })
     }
 
+    // TODO: update it!!!???
     static cleanFiles(files, filenamesToSend, filenameBeforeModifications, producingExtensions) {
         // filenamesToSend.forEach(filename => {
         //     fs.unlink(filename, (err) => {

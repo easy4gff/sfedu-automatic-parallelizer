@@ -7,17 +7,21 @@ exports.ParallelizingUtils = class ParallelizingUtils {
     static getConvertedFiles(connection, req, resStream) {
         switch (parseInt(req.fields.inputMethodId, 10)) {
             case FileInputMethod.LOAD_FROM_FILE_SYSTEM:
-                ParallelizerController.parallelize(
-                    connection,
-                    Object.keys(req.files).map(key => {
-                        return {
-                            path: req.files[key].path,
-                            filename: req.files[key].name
-                        };
-                    }),
-                    req.fields.optionTypeId,
-                    resStream
-                );
+                FilesystemUtils.prepareFilesDir(Object.keys(req.files).map(key => {
+                    return {
+                        path: req.files[key].path,
+                        filename: req.files[key].name
+                    };
+                })).then(dirAndFilenames => {
+                    ParallelizerController.parallelize(
+                        connection,
+                        dirAndFilenames.filenames,
+                        dirAndFilenames.destFolder,
+                        req.fields.optionTypeId,
+                        resStream
+                    );
+                })
+
                 break;
             case FileInputMethod.GET_FROM_TEXT_EDITOR:
                 FilesystemUtils.makeFileFromCodeString(connection, req, req.fields.sourceCode, resStream)
@@ -25,6 +29,7 @@ exports.ParallelizingUtils = class ParallelizingUtils {
                         ParallelizerController.parallelize(
                             connection,
                             [filenames],
+                            null,
                             req.fields.optionTypeId,
                             resStream
                         );
@@ -35,10 +40,11 @@ exports.ParallelizingUtils = class ParallelizingUtils {
                 break;
             case FileInputMethod.LOAD_FROM_LIBRARY:
                 FilesystemUtils.makeFilesFromLibraryExamples(connection, req.fields.libraryExampleId, resStream)
-                    .then(filenames => {
+                    .then(dirAndFilenames => {
                         ParallelizerController.parallelize(
                             connection,
-                            filenames,
+                            dirAndFilenames.filenames,
+                            dirAndFilenames.destFolder,
                             req.fields.optionTypeId,
                             resStream
                         );
