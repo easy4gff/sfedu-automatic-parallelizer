@@ -108,7 +108,8 @@ module.exports.FilesystemUtils = class FilesystemUtils {
             }) 
         });
 
+        console.log(filesDir);
         // Remove directory with original files
-        shelljs.rm('rf', dir);
+        shelljs.rm('-rf', filesDir);
     }
 }

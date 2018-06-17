@@ -113,9 +113,9 @@ module.exports.ParallelizerController = class ParallelizerController {
                                     });
                                     FilesystemUtils.cleanFiles(
                                         files,
-                                        filenamesToSend,
-                                        filenamesBeforeModification,
-                                        executionConfiguration.extensions.producing
+                                        filenamesResulting,
+                                        executionConfiguration.extensions.producing,
+                                        destFolder
                                     );
                                     // fs.writeFile("./test2.zip", buff, function () {
                                     //     console.log("Finished");
@@ -144,9 +144,9 @@ module.exports.ParallelizerController = class ParallelizerController {
                                 });
                                 FilesystemUtils.cleanFiles(
                                     files,
-                                    filenamesToSend,
-                                    filenamesBeforeModification,
-                                    executionConfiguration.extensions.producing
+                                    filenamesResulting,
+                                    executionConfiguration.extensions.producing,
+                                    destFolder
                                 );
                             }
                         });
