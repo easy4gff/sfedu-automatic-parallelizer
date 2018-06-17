@@ -135,7 +135,7 @@ module.exports.ParallelizerController = class ParallelizerController {
                                 status: 'OK',
                                 type: 'result',
                                 filename: files[0].filename,
-                                file: ParallelizerController.base64_encode(physicalFilenames[0])
+                                file: ParallelizerController.base64_encode(filenamesToSend[0])
                             });
                             FilesystemUtils.cleanFiles(
                                 files,
