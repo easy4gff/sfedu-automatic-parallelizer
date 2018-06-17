@@ -1,8 +1,8 @@
 // Static properties for class
 // const _OPS_TOOLS_DIR = '/home/gff/Programming/Coursework/WebOPSTool/';
 // const _UPLOAD_DIR = _OPS_TOOLS_DIR + 'uploads/'
-const _OPS_TOOLS_DIR = '/home/top/WebOPSTool/';
-// const _OPS_TOOLS_DIR = '/var/sites/newwebops/WebOPSTool/';
+// const _OPS_TOOLS_DIR = '/home/top/WebOPSTool/';
+const _OPS_TOOLS_DIR = '/var/sites/newwebops/WebOPSTool/';
 const _UPLOAD_DIR = _OPS_TOOLS_DIR + 'uploads/'
 
 class AppFilesystemConstants {

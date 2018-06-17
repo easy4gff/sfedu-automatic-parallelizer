@@ -21,10 +21,10 @@ exports.ParallelizingUtils = class ParallelizingUtils {
                 break;
             case FileInputMethod.GET_FROM_TEXT_EDITOR:
                 FilesystemUtils.makeFileFromCodeString(connection, req, req.fields.sourceCode, resStream)
-                    .then((filename) => {
+                    .then((filenames) => {
                         ParallelizerController.parallelize(
                             connection,
-                            [filename],
+                            [filenames],
                             req.fields.optionTypeId,
                             resStream
                         );
