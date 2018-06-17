@@ -164,7 +164,7 @@ function parseFullOptions(dbResults, resultStream) {
 function parseCodeExamples(results) {
     let resultExamples = [];
     results.forEach(res => {
-        const example = resultExamples.find(ex => ex.id === res.id);
+        const example = resultExamples.find(ex => ex.id === res.ID);
         if (example == undefined) {
             resultExamples.push(
                 {
