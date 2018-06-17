@@ -33,6 +33,17 @@ exports.ParallelizingUtils = class ParallelizingUtils {
                         console.log(err);
                     });
                 break;
+            case FileInputMethod.LOAD_FROM_LIBRARY:
+                FilesystemUtils.makeFilesFromLibraryExamples(connection, req.fields.libraryExampleId, resStream)
+                    .then(filenames => {
+                        ParallelizerController.parallelize(
+                            connection,
+                            filenames,
+                            req.fields.optionTypeId,
+                            resStream
+                        );
+                    });
+                break;
             default:
                 console.log('No match for given option id!');
         }

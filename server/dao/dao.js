@@ -161,7 +161,35 @@ function parseFullOptions(dbResults, resultStream) {
 //     );
 // }
 
-function parseCodeExamples(results, resultStream) {
+function parseCodeExamples(results) {
+    let resultExamples = [];
+    results.forEach(res => {
+        const example = resultExamples.find(ex => ex.id === res.id);
+        if (example == undefined) {
+            resultExamples.push(
+                {
+                    id : res.ID,
+                    label: {
+                        english: res.LABEL_ENG,
+                        russian: res.LABEL_RUS
+                    },
+                    codefiles: [{
+                        filename: res.FILENAME,
+                        code: res.CODE
+                    }]
+                } 
+            );
+        } else {
+            example.codefiles.push({
+                filename: res.FILENAME,
+                code: res.CODE
+            })
+        }
+    })
+    return resultExamples;
+}
+
+function parseAndSendCodeExamples(results, resultStream) {
     let resultExamples = [];
     results.forEach(res => {
         const example = resultExamples.find(ex => ex.id === res.id);
@@ -209,8 +237,19 @@ function getCodeExamples(connection, resultStream) {
     connection.query('SELECT * FROM CODE_EXAMPLES', function(error, results, fields) {
         if (error) throw error;
 
-        parseCodeExamples(results, resultStream);
+        parseAndSendCodeExamples(results, resultStream);
     })
+}
+
+function getCodeExample(connection, exampleId, resultStream) {
+    return new Promise((resolve, reject) => {
+        connection.query('SELECT * FROM CODE_EXAMPLES WHERE ID=?', [exampleId], function(error, results, fields) {
+            if (error) throw error;
+    
+            resolve(parseCodeExamples(results));
+        })
+    });
+
 }
 
 function findUserInDB(connection, username, password) {
@@ -584,5 +623,6 @@ module.exports = {
     addParallelizingOption: addParallelizingOption,
     editParallelizingOption: editParallelizingOption,
     deleteParallelizingOption: deleteParallelizingOption,
-    getExtensionsForMethod: getExtensionsForMethod
+    getExtensionsForMethod: getExtensionsForMethod,
+    getCodeExample: getCodeExample
 };
