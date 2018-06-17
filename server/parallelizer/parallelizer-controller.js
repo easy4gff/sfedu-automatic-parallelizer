@@ -28,6 +28,7 @@ module.exports.ParallelizerController = class ParallelizerController {
         }
         let filenamesBeforeModification = [];
         let filenamesToSend = [];
+        let filenamesResulting = [];
 
         try {
 
@@ -58,6 +59,8 @@ module.exports.ParallelizerController = class ParallelizerController {
 
                             console.log('stdout: ' + stdout);
                             console.log('stderr: ' + stderr);
+                            console.log('error code: ', error.code);
+                            console.log('error signal: ', error.signal);
                             console.log('error: ' + error); 
                             console.log('Working dir: ' + process.cwd());                           
 
@@ -73,6 +76,7 @@ module.exports.ParallelizerController = class ParallelizerController {
                                         }
                                         console.log('Found: ' + outputPath);
                                         filenamesToSend.push(outputPath);
+                                        filenamesResulting.push(outputPath);
                                     } else {
                                         console.log('Not found: ' + outputPath);                                    
                                     }
@@ -155,9 +159,9 @@ module.exports.ParallelizerController = class ParallelizerController {
         catch (e) {
             FilesystemUtils.cleanFiles(
                 files,
-                filenamesToSend,
-                filenamesBeforeModification,
-                executionConfiguration.extensions.producing
+                filenamesResulting,
+                executionConfiguration.extensions.producing,
+                destFolder
             );
         }
     }

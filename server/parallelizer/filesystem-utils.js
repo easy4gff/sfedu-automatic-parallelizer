@@ -86,29 +86,29 @@ module.exports.FilesystemUtils = class FilesystemUtils {
         })
     }
 
-    // TODO: update it!!!???
-    static cleanFiles(files, filenamesToSend, filenameBeforeModifications, producingExtensions) {
-        // filenamesToSend.forEach(filename => {
-        //     fs.unlink(filename, (err) => {
-        //         if (err) console.error(err);
-        //     });
-        // })
+    static cleanFiles(files, outPutFiles, producingExtensions, filesDir) {
+        // Remove files which were produced as output files
+        outPutFiles.forEach(file => {
+            if (fs.existsSync(file)) {
+                fs.unlink(file, (err) => {
+                    if (err) console.error(err);
+                });
+            }
+        })
 
-        // filenameBeforeModifications.forEach(filename => {
-        //     fs.unlink(filename, (err) => {
-        //         if (err) console.error(err);
-        //     });
-        // })
+        // Remove files which were produced, but not required in response
+        files.forEach(file => {
+            producingExtensions.forEach((val, index, arr) => {
+                const produced = file.path + val;
+                if (fs.existsSync(produced)) {
+                    fs.unlink(produced, (err) => {
+                        if (err) console.error(err);
+                    });
+                }
+            }) 
+        });
 
-        // files.forEach(file => {
-        //     producingExtensions.forEach((val, index, arr) => {
-        //         const produced = file.path + val;
-        //         if (fs.existsSync(produced)) {
-        //             fs.unlink(produced, (err) => {
-        //                 if (err) console.error(err);
-        //             });
-        //         }
-        //     }) 
-        // })
+        // Remove directory with original files
+        shelljs.rm('rf', dir);
     }
 }
