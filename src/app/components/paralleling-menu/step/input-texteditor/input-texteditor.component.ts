@@ -56,12 +56,16 @@ export class InputTexteditorComponent implements OnInit {
       if (cm !== null) {
           cm.refresh();
 
+          try {
           // Set cursor to the end
           const posCursor = {line: 0, ch: 0};
           posCursor.line = cm.doc.children[0].lines.length - 1;
           posCursor.ch = cm.doc.children[0].lines[posCursor.line].text.length;
 
           cm.doc.setCursor(posCursor);
+          } catch (e) {
+
+          }
       }
     }, 200);
   }
