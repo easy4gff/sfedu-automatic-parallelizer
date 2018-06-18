@@ -74,8 +74,8 @@ export class OptionRequestBuilderService {
         summary: this.langService.get(LanguageConstants.SERVER_ERROR),
         detail: error.message
       }]);
+      this.loadingStatus$.next(false);
     });
-    this.loadingStatus$.next(false);
   }
 
   private preparePayload(formData: FormData): void {
