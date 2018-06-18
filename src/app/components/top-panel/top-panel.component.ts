@@ -16,6 +16,12 @@ import { LanguageConstants } from '../../model/language/language-constants';
           text-align: center;
           color: crimson;
         }
+
+        @media screen and (max-width: 1000px) {
+          header {
+            margin: 50px;
+          }
+        }
   `]
 })
 export class TopPanelComponent implements OnInit {

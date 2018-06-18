@@ -229,6 +229,21 @@ export class LanguageConstants {
         english: 'Are you sure you want to delete this method?',
         russian: 'Вы уверены, что хотите удалить этот метод?'
     };
+
+    public static readonly SERVER_ERROR: LanguageConstant = {
+        english: 'Server error occured',
+        russian: 'Ошибка сервера'
+    };
+
+    public static readonly ERROR_WHILE_PARALLELIZE: LanguageConstant = {
+        english: 'Error occured while parallelize input',
+        russian: 'Во время преобразования входных данных возникли ошибки'
+    };
+
+    public static readonly PARALLELIZING_SUCCEED: LanguageConstant = {
+        english: 'Parallelizing succeed',
+        russian: 'Преобразование выполнено успешно'
+    };
 }
 
 

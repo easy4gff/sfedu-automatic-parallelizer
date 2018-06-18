@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BrowserModule } from '@angular/platform-browser';
 
+import { MessagesModule, MessageModule } from 'primeng/primeng';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { PanelModule } from 'primeng/panel';
 import { ButtonModule } from 'primeng/button';
 import { ListboxModule } from 'primeng/listbox';
@@ -52,7 +54,10 @@ export const parallizilingMenuRoutes: Routes = [
     StepButtonsModule,
     InputTexteditorModule,
     TabViewModule,
-    BrowserModule
+    BrowserModule,
+    ProgressSpinnerModule,
+    MessageModule,
+    MessagesModule
   ],
   declarations: [
     ParallelingMenuComponent,

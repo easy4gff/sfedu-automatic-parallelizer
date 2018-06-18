@@ -17,6 +17,11 @@ import { SliderMenuService } from '../../services/slider-menu.service';
     #top-menu {
       background-color: rgb(35, 153, 229);
       height: 50px;
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 100%;
+      z-index: 1;
     }
 
     #slider-menu-launcher {

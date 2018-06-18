@@ -8,6 +8,7 @@ import { ParallelizingOptionType } from '../../../../model/paralleizing-option/p
 import { FileInputMethodService } from '../../../../services/file-input-method.service';
 import { FileInputMethodType } from '../../../../model/paralleizing-option/parallelizing-option.fileinput-method';
 import { RoutingConstants } from '../../../../model/routing-utils/routing-constants';
+import { Message } from 'primeng/primeng';
 
 @Component({
   selector: 'app-decipher-captcha',
@@ -17,6 +18,10 @@ import { RoutingConstants } from '../../../../model/routing-utils/routing-consta
       <!-- <div class="upload-container" style="margin-top: 10px">
         <p-button [label]="labelUpload" (onClick)="sendRequest()"></p-button>
       </div> -->
+      <div class="gs-flex-centered-hv">
+        <p-progressSpinner *ngIf="loadingStatus"></p-progressSpinner>
+      </div>
+      <p-messages [(value)]="resultMessages"></p-messages>
       <app-step-buttons
         [prevLink]="prevLink"
         [labelNextStep]="labelUpload"
@@ -31,13 +36,32 @@ import { RoutingConstants } from '../../../../model/routing-utils/routing-consta
       align-items: center;
       justify-content: center;
     }
+
+    :host ::ng-deep .ui-messages-detail {
+      white-space: pre-line;
+      word-wrap: break-word;
+    }
+
+    :host ::ng-deep .ui-messages {
+      /*display: flex !important;*/
+      margin: 30px;
+    }
+
+    :host ::ng-deep .ui-messages-detail {
+      display: block !important;
+    }
+
+    :host ::ng-deep .ui-messages > ul {
+      display: inline !important;
+    }
   `]
 })
 export class DecipherCaptchaComponent implements OnInit {
   labelUpload: string;
   labelConfirm: string;
-
+  loadingStatus: boolean;
   prevLink: string;
+  resultMessages: Message[];
 
   constructor(
     private langService: LanguageService,
@@ -62,6 +86,14 @@ export class DecipherCaptchaComponent implements OnInit {
     this.langService.currentLanguage$.subscribe(() => {
       this.labelUpload = this.langService.get(LanguageConstants.UPLOAD);
       this.labelConfirm = this.langService.get(LanguageConstants.UPLOAD_CONFIRMATION);
+    });
+
+    this.optionBuilderService.loadingStatus$.subscribe(status => {
+      this.loadingStatus = status;
+    });
+
+    this.optionBuilderService.resultMessages$.subscribe(messages => {
+      this.resultMessages = messages;
     });
   }
 

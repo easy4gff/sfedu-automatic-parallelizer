@@ -9,6 +9,10 @@ import { ParallelizingOptionType } from '../model/paralleizing-option/paralleliz
 import { HttpClient } from '@angular/common/http';
 import { FileInputMethodService } from './file-input-method.service';
 import { saveAs as importedSaveAs } from 'file-saver';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Message } from 'primeng/primeng';
+import { LanguageConstants } from '../model/language/language-constants';
+import { LanguageService } from './language.service';
 
 const SERVER_API = '/api';
 const SERVICE_CONTROLLER = '/parallelize';
@@ -17,10 +21,13 @@ const SERVICE_CONTROLLER = '/parallelize';
 export class OptionRequestBuilderService {
   public currentOptionType: ParallelizingOptionType;
   public optionData: ParallelizingOptionData;
+  public loadingStatus$: BehaviorSubject<boolean> = new BehaviorSubject(false);
+  public resultMessages$: BehaviorSubject<Message[]> = new BehaviorSubject([]);
 
   constructor(
     private http: HttpClient,
-    private inputMethodService: FileInputMethodService
+    private inputMethodService: FileInputMethodService,
+    private langService: LanguageService
   ) { }
 
   sendRequest() {
@@ -32,6 +39,7 @@ export class OptionRequestBuilderService {
     const formData: FormData = new FormData();
     this.preparePayload(formData);
 
+    this.loadingStatus$.next(true);
     this.http.post(SERVER_API + SERVICE_CONTROLLER, /*{
       optionTypeId: this.currentOptionType,
       optionData: this.optionData
@@ -41,11 +49,33 @@ export class OptionRequestBuilderService {
       //   responseType: 'blob'
       // }
     ).subscribe((res: any) => {
-      console.log(res);
-      const blob = this.base64ToBlob(res.file);
-      importedSaveAs(blob, res.filename);
-      this.downloadFile(blob);
+      if (res.status === 'OK') {
+        const blob = this.base64ToBlob(res.file);
+        importedSaveAs(blob, res.filename);
+        this.downloadFile(blob);
+        this.resultMessages$.next([{
+          severity: 'success',
+          summary: this.langService.get(LanguageConstants.PARALLELIZING_SUCCEED)/*,
+          detail: this.langService.get(LanguageConstants.PARALLELIZING_SUCCEED)*/
+        }]);
+      } else {
+        this.resultMessages$.next([{
+          severity: 'warn',
+          summary: this.langService.get(LanguageConstants.ERROR_WHILE_PARALLELIZE),
+          detail: res.message
+        }]);
+      }
+      this.loadingStatus$.next(false);
+    },
+    (error: any) => {
+      console.log(error);
+      this.resultMessages$.next([{
+        severity: 'warn',
+        summary: this.langService.get(LanguageConstants.SERVER_ERROR),
+        detail: error.message
+      }]);
     });
+    this.loadingStatus$.next(false);
   }
 
   private preparePayload(formData: FormData): void {

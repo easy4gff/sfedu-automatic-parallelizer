@@ -52,64 +52,96 @@ module.exports.ParallelizerController = class ParallelizerController {
                     try {
                         require('child_process').exec(executionConfiguration.cmdLine, function puts(error, stdout, stderr) {                    
                         // shelljs.exec(executionConfiguration.cmdLine, function(status, output) {
-                            // console.log('Exit status:', status);
-                            // console.log('Program output:', output);
-                            // status = shelljs.exec(executionConfiguration.cmdLine, { maxBuffer: 1024*1024*1024 }).status;
-                            // console.log('Exit status:', status);
 
-                            console.log('stdout: ' + stdout);
-                            console.log('stderr: ' + stderr);
-                            console.log('error code: ', error.code);
-                            console.log('error signal: ', error.signal);
-                            console.log('error: ' + error); 
-                            console.log('Working dir: ' + process.cwd());                           
+                            if (error && error.code != 0) {
+                                outStream.send({
+                                    status: 'ERR',
+                                    type: 'error message',
+                                    message: `signal: ${error.signal}
+                                    error code: ${error.code}
+                                    stdout: ${stdout}
+                                    stderr: ${stderr}
+                                    `
+                                });
+                            } else {                      
 
-                            filenamesToSend = [];
-                            files.forEach(file => {
-                                let found = false;
-                                for (let i = 0; i < executionConfiguration.extensions.resulting.length; ++i) {
-                                    const outputPath = ParallelizerController.fcConstants.RESULTS_WORKING_DIR + file.filename + executionConfiguration.extensions.resulting[i];
-                                    if (fs.existsSync(outputPath)) {
-                                        if (!found) {
-                                            found = true;
-                                            filenamesBeforeModification.push(file.path);
+                                filenamesToSend = [];
+                                files.forEach(file => {
+                                    let found = false;
+                                    for (let i = 0; i < executionConfiguration.extensions.resulting.length; ++i) {
+                                        const outputPath = ParallelizerController.fcConstants.RESULTS_WORKING_DIR + file.filename + executionConfiguration.extensions.resulting[i];
+                                        if (fs.existsSync(outputPath)) {
+                                            if (!found) {
+                                                found = true;
+                                                filenamesBeforeModification.push(file.path);
+                                            }
+                                            console.log('Found: ' + outputPath);
+                                            filenamesToSend.push(outputPath);
+                                            filenamesResulting.push(outputPath);
+                                        } else {
+                                            console.log('Not found: ' + outputPath);                                    
                                         }
-                                        console.log('Found: ' + outputPath);
-                                        filenamesToSend.push(outputPath);
-                                        filenamesResulting.push(outputPath);
-                                    } else {
-                                        console.log('Not found: ' + outputPath);                                    
                                     }
-                                }
-                                if (!found) {
-                                    filenamesToSend.push(file.path);
-                                    
-                                }
-                            });
+                                    if (!found) {
+                                        filenamesToSend.push(file.path);
+                                        
+                                    }
+                                });
 
-                            console.log(filenamesToSend);
+                                console.log(filenamesToSend);
 
-                            if (filenamesToSend.length > 1) {
-                                // zip logic
-                                // what should I do to rename multiple files?
-                                // maybe create temporary dir, move files there and then send and remove dir with -rf flag?
-                                // SOUNDS VERY GOOD!!!
+                                if (filenamesToSend.length > 1) {
+                                    // zip logic
+                                    // what should I do to rename multiple files?
+                                    // maybe create temporary dir, move files there and then send and remove dir with -rf flag?
+                                    // SOUNDS VERY GOOD!!!
 
 
-                                let archive = new zip();
-                                archive.addFiles(files.map((file, index, array) => {
-                                    return {
-                                        name: file.filename,
-                                        path: filenamesToSend[index]
-                                    };
-                                }), (err) => {
-                                    if (err) throw err;
-                                    var buff = archive.toBuffer();
+                                    let archive = new zip();
+                                    archive.addFiles(files.map((file, index, array) => {
+                                        return {
+                                            name: file.filename,
+                                            path: filenamesToSend[index]
+                                        };
+                                    }), (err) => {
+                                        if (err) throw err;
+                                        var buff = archive.toBuffer();
+                                        outStream.send({
+                                            status: 'OK',
+                                            type: 'result',
+                                            filename: 'results.zip',
+                                            file: buff.toString('base64')
+                                        });
+                                        FilesystemUtils.cleanFiles(
+                                            files,
+                                            filenamesResulting,
+                                            executionConfiguration.extensions.producing,
+                                            destFolder
+                                        );
+                                        // fs.writeFile("./test2.zip", buff, function () {
+                                        //     console.log("Finished");
+                                        // });
+                                    });
+                                    // mk random dir
+                                    // const newdirName = randomstring.generate();
+                                    // exec('mkdir ' + newdirName, (st, out) => {
+                                    //     if (st == 0) {
+                                    //         for (let i = 0; i < filenamesToSend.length; ++i) {
+                                    //             exec(`mv ${filenamesToSend[i]} ${newdirName}/${files[i].filename}}`);
+                                    //         }
+                                    //     } else {
+                                    //         throw out;
+                                    //     }
+                                        
+                                        
+                                    // });
+                                } else {
+                                    // send as is
                                     outStream.send({
                                         status: 'OK',
                                         type: 'result',
-                                        filename: 'results.zip',
-                                        file: buff.toString('base64')
+                                        filename: files[0].filename,
+                                        file: ParallelizerController.base64_encode(filenamesToSend[0])
                                     });
                                     FilesystemUtils.cleanFiles(
                                         files,
@@ -117,37 +149,7 @@ module.exports.ParallelizerController = class ParallelizerController {
                                         executionConfiguration.extensions.producing,
                                         destFolder
                                     );
-                                    // fs.writeFile("./test2.zip", buff, function () {
-                                    //     console.log("Finished");
-                                    // });
-                                });
-                                // mk random dir
-                                // const newdirName = randomstring.generate();
-                                // exec('mkdir ' + newdirName, (st, out) => {
-                                //     if (st == 0) {
-                                //         for (let i = 0; i < filenamesToSend.length; ++i) {
-                                //             exec(`mv ${filenamesToSend[i]} ${newdirName}/${files[i].filename}}`);
-                                //         }
-                                //     } else {
-                                //         throw out;
-                                //     }
-                                    
-                                    
-                                // });
-                            } else {
-                                // send as is
-                                outStream.send({
-                                    status: 'OK',
-                                    type: 'result',
-                                    filename: files[0].filename,
-                                    file: ParallelizerController.base64_encode(filenamesToSend[0])
-                                });
-                                FilesystemUtils.cleanFiles(
-                                    files,
-                                    filenamesResulting,
-                                    executionConfiguration.extensions.producing,
-                                    destFolder
-                                );
+                                }
                             }
                         });
                     } catch (e) {
@@ -157,6 +159,11 @@ module.exports.ParallelizerController = class ParallelizerController {
             });
         }
         catch (e) {
+            outStream.send({
+                status: 'ERR',
+                type: 'error message',
+                message: 'error while running executional file'
+            });
             FilesystemUtils.cleanFiles(
                 files,
                 filenamesResulting,
