@@ -48,8 +48,8 @@ module.exports.ParallelizerController = class ParallelizerController {
                     // Exec logic
                     try {
                         console.log('Call exec');
-                        // require('child_process').exec(executionConfiguration.cmdLine, function puts(error, stdout, stderr) {                    
-                            require('child_process').exec('sleep 5', function puts(error, stdout, stderr) {                    
+                        require('child_process').exec(executionConfiguration.cmdLine, function puts(error, stdout, stderr) {                    
+                            // require('child_process').exec('sleep 5', function puts(error, stdout, stderr) {                    
                         // shelljs.exec(executionConfiguration.cmdLine, function(status, output) {
                             console.log('Got results');
 
