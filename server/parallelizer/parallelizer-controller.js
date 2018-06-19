@@ -122,6 +122,7 @@ module.exports.ParallelizerController = class ParallelizerController {
                                                 filename: 'results.zip',
                                                 file: buff.toString('base64')
                                             });
+                                            console.log('Success!\n\n\n\n\n\n');
                                         }
                                         FilesystemUtils.cleanFiles(
                                             files,
