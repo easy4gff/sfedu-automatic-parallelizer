@@ -6,6 +6,7 @@ const router = express.Router();
 
 const AppFilesystemConstants = require('../parallelizer/filesystem-constants').AppFilesystemConstants;
 const ParallelizingUtils = require('../parallelizing-utils/parallelizing-utils').ParallelizingUtils;
+const queue = require('express-queue');
 
 var mysql      = require('mysql');
 // var connection = mysql.createConnection({
@@ -78,13 +79,15 @@ router.get('/users', (req, res) => {
     });
 });*/
 
-router.get('/parallelizing-options', (req, res) => {
+router.get('/parallelizing-options',
+queue({ activeLimit: 1, queuedLimit: -1 }),
+(req, res) => {
     console.log('Request for parallelizing options');
     dao.getAvailableOptions(connection, res);
     // res.send(availableOptions);
 });
 
-router.get('/all-parallelizing-options',
+router.get('/all-parallelizing-options',queue({ activeLimit: 1, queuedLimit: -1 }),
     passport.authenticationMiddleware(),
     (req, res) => {
         dao.getAllOptions(connection, res);
@@ -93,14 +96,14 @@ router.get('/all-parallelizing-options',
 );
 
 router.get('/code-examples',
-    passport.authenticationMiddleware(),
+    passport.authenticationMiddleware(),queue({ activeLimit: 1, queuedLimit: -1 }),
     (req, res) => {
         dao.getCodeExamples(connection, res);
     }
 );
 
 router.post('/edit-library-example',
-    passport.authenticationMiddleware(),
+    passport.authenticationMiddleware(),queue({ activeLimit: 1, queuedLimit: -1 }),
     (req, res) => {
         console.log(req.body.exampleId);
         console.log(req.body.exampleLabelRussian);
@@ -117,7 +120,7 @@ router.post('/edit-library-example',
 
 router.post('/add-library-example',
     formidable(),
-    passport.authenticationMiddleware(),
+    passport.authenticationMiddleware(),queue({ activeLimit: 1, queuedLimit: -1 }),
     (req, res) => {
         console.log(req.fields);
         console.log(req.files);
@@ -133,7 +136,7 @@ router.post('/add-library-example',
     }
 )
 
-router.post('/delete-library-example',
+router.post('/delete-library-example',queue({ activeLimit: 1, queuedLimit: -1 }),
     passport.authenticationMiddleware(),
     (req, res) => {
         console.log(req.body.exampleId);
@@ -147,7 +150,7 @@ router.post('/delete-library-example',
     }
 );
 
-router.post('/add-parallelizing-method',
+router.post('/add-parallelizing-method',queue({ activeLimit: 1, queuedLimit: -1 }),
     passport.authenticationMiddleware(),
     (req, res) => {
         console.log(req.body.methodModel);
@@ -163,7 +166,7 @@ router.post('/add-parallelizing-method',
     }
 );
 
-router.post('/edit-parallelizing-method',
+router.post('/edit-parallelizing-method',queue({ activeLimit: 1, queuedLimit: -1 }),
     passport.authenticationMiddleware(),
     (req, res) => {
         console.log(req.body.methodModel);
@@ -179,7 +182,7 @@ router.post('/edit-parallelizing-method',
     }
 );
 
-router.post('/delete-parallelizing-method',
+router.post('/delete-parallelizing-method',queue({ activeLimit: 1, queuedLimit: -1 }),
     passport.authenticationMiddleware(),
     (req, res) => {
         console.log(req.body.methodId);
@@ -193,7 +196,7 @@ router.post('/delete-parallelizing-method',
     }
 );
 
-router.post('/parallelize',
+router.post('/parallelize',queue({ activeLimit: 1, queuedLimit: -1 }),
     formidable({
         uploadDir: AppFilesystemConstants.UPLOAD_DIR
     }),
@@ -208,7 +211,7 @@ router.post('/parallelize',
     }
 );
 
-router.post('/login', (req, res, next) => {
+router.post('/login', queue({ activeLimit: 1, queuedLimit: -1 }),(req, res, next) => {
         passport.authenticate('local', (err, user, info) => {
             if (err) {
                 return next(err);
@@ -234,7 +237,7 @@ router.post('/login', (req, res, next) => {
     }
 );
 
-router.get('/logout',
+router.get('/logout',queue({ activeLimit: 1, queuedLimit: -1 }),
     (req, res) => {
         req.logout();
         res.send({
