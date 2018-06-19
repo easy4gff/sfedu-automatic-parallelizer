@@ -14,7 +14,7 @@ import { Message } from 'primeng/primeng';
   selector: 'app-decipher-captcha',
   template: `
     <p-panel [header]="labelConfirm">
-      <p-captcha siteKey="6LdpoV8UAAAAACljc9RQwhfXHkzbd_DetUK_QAHg" (onResponse)="showResponse($event)"></p-captcha>
+      <!-- <p-captcha siteKey="6LdpoV8UAAAAACljc9RQwhfXHkzbd_DetUK_QAHg" (onResponse)="showResponse($event)"></p-captcha> -->
       <!-- <div class="upload-container" style="margin-top: 10px">
         <p-button [label]="labelUpload" (onClick)="sendRequest()"></p-button>
       </div> -->
