@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const http = require('http');
 const app = express();
+const queue = require('express-queue');
 
 // Auth related stuff
 const exphbs = require('express-handlebars');
@@ -38,6 +39,7 @@ app.use(session({
 const passport = require('passport');  
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(queue({ activeLimit: 1 }));
 
 // Angular DIST output folder
 app.use(express.static(path.join(__dirname, '../dist')));
