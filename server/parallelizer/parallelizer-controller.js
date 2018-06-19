@@ -20,7 +20,7 @@ module.exports.ParallelizerController = class ParallelizerController {
         return new Buffer(bitmap).toString('base64');
     }
 
-    static parallelize(connection, files, destFolder, optionId, outStream) {
+    static parallelize(connection, files, destFolder, optionId, return return outStream) {
 
         const executionConfiguration = {
             cmdLine: null,
@@ -54,7 +54,7 @@ module.exports.ParallelizerController = class ParallelizerController {
 
                             if (error && error.code != 0) {
                                 console.log('Error after exec');
-                                outStream.send({
+                                return outStream.send({
                                     status: 'ERR',
                                     type: 'error message',
                                     message: `signal: ${error.signal}
@@ -105,7 +105,7 @@ module.exports.ParallelizerController = class ParallelizerController {
                                         };
                                     }), (err) => {
                                         if (err) {
-                                            outStream.send({
+                                            return outStream.send({
                                                 status: 'ERR',
                                                 type: 'error message',
                                                 message: `signal: ${error.signal}
@@ -116,7 +116,7 @@ module.exports.ParallelizerController = class ParallelizerController {
                                             });
                                         } else {
                                             var buff = archive.toBuffer();
-                                            outStream.send({
+                                            return outStream.send({
                                                 status: 'OK',
                                                 type: 'result',
                                                 filename: 'results.zip',
@@ -149,7 +149,7 @@ module.exports.ParallelizerController = class ParallelizerController {
                                     // });
                                 } else {
                                     // send as is
-                                    outStream.send({
+                                    return outStream.send({
                                         status: 'OK',
                                         type: 'result',
                                         filename: files[0].filename,
@@ -172,7 +172,7 @@ module.exports.ParallelizerController = class ParallelizerController {
         }
         catch (e) {
             console.log('Unexpected error');
-            outStream.send({
+            return outStream.send({
                 status: 'ERR',
                 type: 'error message',
                 message: 'error while running executional file'
