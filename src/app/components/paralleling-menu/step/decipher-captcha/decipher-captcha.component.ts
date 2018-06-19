@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { LanguageService } from '../../../../services/language.service';
 import { LanguageConstants } from '../../../../model/language/language-constants';
 import { ParallelizingOptionsService } from '../../../../services/parallelizing-options.service';
@@ -56,7 +56,7 @@ import { Message } from 'primeng/primeng';
     }
   `]
 })
-export class DecipherCaptchaComponent implements OnInit {
+export class DecipherCaptchaComponent implements OnInit, OnDestroy {
   labelUpload: string;
   labelConfirm: string;
   loadingStatus: boolean;
@@ -95,6 +95,10 @@ export class DecipherCaptchaComponent implements OnInit {
     this.optionBuilderService.resultMessages$.subscribe(messages => {
       this.resultMessages = messages;
     });
+  }
+
+  ngOnDestroy() {
+    this.optionBuilderService.resultMessages$.next([]);
   }
 
   sendRequest(): void {

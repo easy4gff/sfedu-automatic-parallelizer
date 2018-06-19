@@ -87,6 +87,7 @@ module.exports.FilesystemUtils = class FilesystemUtils {
     }
 
     static cleanFiles(files, outPutFiles, producingExtensions, filesDir) {
+        console.log('Cleaning directory');
         // Remove files which were produced as output files
         outPutFiles.forEach(file => {
             if (fs.existsSync(file)) {

@@ -15,11 +15,16 @@ import { LanguageConstants } from '../../model/language/language-constants';
         h1 {
           text-align: center;
           color: crimson;
+          display: flex;
+        }
+
+        header {
+          display: flex;
         }
 
         @media screen and (max-width: 1000px) {
           header {
-            margin: 50px;
+            margin-top: 50px;
           }
         }
   `]

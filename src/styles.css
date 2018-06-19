@@ -2,7 +2,7 @@
 body {
     padding: 0px;
     margin: 0px;
-    height: 10000px;
+    /* height: 10000px; */
     background-color: #F5F7F7;  
 }
 
@@ -25,4 +25,21 @@ body {
   /* Overriding primeng styles  FIXME*/
   a, .ui-accordion-header-text {
     text-decoration: none !important;
+  }
+
+  @media screen and (max-width: 1000px) {
+    #source-code-dialog .ui-dialog {
+      width: 100% !important;
+      height: 100% !important;
+      left: 0 !important;
+      top: 0 !important;
+      /*width: 800px;*/
+    }
+  }
+
+  @media screen and (max-width: 601px) {
+    #login-dialog .ui-dialog {
+      width: 100% !important;
+      left: 0 !important;
+    }
   }

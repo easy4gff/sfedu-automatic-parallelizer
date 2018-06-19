@@ -37,7 +37,6 @@ module.exports.ParallelizerController = class ParallelizerController {
             dao.getCommandLineForMethod(connection, optionId)
             .then(resultRow => {
                     executionConfiguration.cmdLine = `${this.fcConstants.OPS_TOOLS_DIR}${resultRow.CMD_LINE} ${physicalFilenames.join(' ')}`;
-                    console.log(executionConfiguration.cmdLine);
                     return dao.getExtensionsForMethod(connection, optionId);
             })
             .then((extensions) => {
@@ -46,14 +45,15 @@ module.exports.ParallelizerController = class ParallelizerController {
             .then(() => {
                     console.log(executionConfiguration);
         
-                    console.log(fs.existsSync(this.fcConstants.OPS_TOOLS_DIR));
-                    console.log(fs.existsSync(this.fcConstants.OPS_TOOLS_DIR + 'WebOPSTool'));
                     // Exec logic
                     try {
+                        console.log('Call exec');
                         require('child_process').exec(executionConfiguration.cmdLine, function puts(error, stdout, stderr) {                    
                         // shelljs.exec(executionConfiguration.cmdLine, function(status, output) {
+                            console.log('Got results');
 
                             if (error && error.code != 0) {
+                                console.log('Error after exec');
                                 outStream.send({
                                     status: 'ERR',
                                     type: 'error message',
@@ -104,14 +104,25 @@ module.exports.ParallelizerController = class ParallelizerController {
                                             path: filenamesToSend[index]
                                         };
                                     }), (err) => {
-                                        if (err) throw err;
-                                        var buff = archive.toBuffer();
-                                        outStream.send({
-                                            status: 'OK',
-                                            type: 'result',
-                                            filename: 'results.zip',
-                                            file: buff.toString('base64')
-                                        });
+                                        if (err) {
+                                            outStream.send({
+                                                status: 'ERR',
+                                                type: 'error message',
+                                                message: `signal: ${error.signal}
+                                                error code: ${error.code}
+                                                stdout: ${stdout}
+                                                stderr: ${stderr}
+                                                `
+                                            });
+                                        } else {
+                                            var buff = archive.toBuffer();
+                                            outStream.send({
+                                                status: 'OK',
+                                                type: 'result',
+                                                filename: 'results.zip',
+                                                file: buff.toString('base64')
+                                            });
+                                        }
                                         FilesystemUtils.cleanFiles(
                                             files,
                                             filenamesResulting,
@@ -159,6 +170,7 @@ module.exports.ParallelizerController = class ParallelizerController {
             });
         }
         catch (e) {
+            console.log('Unexpected error');
             outStream.send({
                 status: 'ERR',
                 type: 'error message',

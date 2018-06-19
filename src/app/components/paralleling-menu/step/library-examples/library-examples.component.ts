@@ -23,12 +23,14 @@ import { CodeFile } from '../../../../model/library-code-example/library-example
     >
     </p-listbox>
 
-    <p-button
-      *ngIf="this.selectedOption"
-      class="ui-md-6 ui-lg-6"
-      [label]="labelShowSourceCode"
-      (click)="showSourceCode()"
-    ></p-button>
+    <div *ngIf="this.selectedOption" id="show-source-code-dialog-button" class="ui-g-6 ui-lg-4 ui-sm-12">
+      <button
+        pButton
+        [label]="labelShowSourceCode"
+        (click)="showSourceCode()"
+        style="width: 100%; padding: 0;"
+      ></button>
+    </div>
 
     <app-step-buttons
       [prevLink]="prevLink"
@@ -39,7 +41,24 @@ import { CodeFile } from '../../../../model/library-code-example/library-example
 
   </p-panel>
   `,
-  styles: []
+  styles: [`
+
+    #show-source-code-dialog-button {
+      text-align: center;
+      margin: 0 auto;
+      float: none;
+      margin-top: 17px;
+      padding-left: 15px;
+      padding-right: 15px;
+    }
+
+    #show-source-code-dialog-button:after {
+      content: "";
+      display: table;
+      clear: both;
+    }
+
+  `]
 })
 export class LibraryExamplesComponent implements OnInit {
   labelChooseExample: string;

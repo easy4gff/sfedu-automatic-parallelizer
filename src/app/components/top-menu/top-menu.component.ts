@@ -21,7 +21,7 @@ import { SliderMenuService } from '../../services/slider-menu.service';
       left: 0;
       top: 0;
       width: 100%;
-      z-index: 1;
+      z-index: 5; /* I am really sorry about this :( */
     }
 
     #slider-menu-launcher {

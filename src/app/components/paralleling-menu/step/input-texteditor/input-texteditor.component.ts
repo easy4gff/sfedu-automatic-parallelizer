@@ -24,6 +24,12 @@ import 'codemirror/mode/clike/clike';
     :host ::ng-deep .CodeMirror-hscrollbar {
       display: none !important;
     }*/
+
+    /*@media screen and (max-width: 1001px) {*/
+      :host ::ng-deep .CodeMirror {
+        height: 70vh;
+      }
+/*}*/
   `]
 })
 export class InputTexteditorComponent implements OnInit {

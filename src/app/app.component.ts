@@ -15,8 +15,8 @@ import { LayoutSwitcherService } from './services/layout-switcher.service';
         <div *ngIf="mobileLayout" class="ui-g-12 no-padding">
           <app-top-menu></app-top-menu>
         </div>
-        <div class="ui-g-12 ui-md-10 ui-md-offset-1 ui-lg-10 ui-lg-offset-1">
-          <app-top-panel></app-top-panel>
+        <div class="ui-g-12 ui-md-10 ui-md-offset-1 ui-lg-10 ui-lg-offset-1" style="margin: 0 auto; display: flex;">
+          <app-top-panel style="margin: 0 auto;"></app-top-panel>
         </div>
         <!-- <app-main></app-main> -->
         <!-- <div class="ui-g-offset-1 ui-g-10"> -->

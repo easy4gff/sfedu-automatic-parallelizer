@@ -8,11 +8,13 @@ import { CodeFile } from '../../../../model/library-code-example/library-example
   selector: 'app-example-source-code-dialog',
   template: `
   <p-dialog
+    id="source-code-dialog"
     [header]="'Source code inspector'"
     [(visible)]="display"
     [modal]="true"
     [appendTo]="'body'"
     [width]="getDialogWidth()"
+    (onHide)="onHide()"
   >
     <p-tabView (onChange)="onTabChange($event)">
       <p-tabPanel #panel *ngFor="let codefile of codeFiles; let i = index" [selected]="i == 0"
@@ -32,6 +34,15 @@ import { CodeFile } from '../../../../model/library-code-example/library-example
       /*width: 800px;*/
     }
 
+    /*@media screen and (max-width: 1000px) {
+      :host ::ng-deep .ui-dialog {
+        width: 100% !important;
+        height: 100% !important;
+        left: 0 !important;
+        top: 0 !important;
+      }
+    }*/
+
   `]
 })
 export class ExampleSourceCodeDialogComponent implements OnInit, AfterViewInit {
@@ -41,6 +52,7 @@ export class ExampleSourceCodeDialogComponent implements OnInit, AfterViewInit {
   public display: boolean;
   public codeToShow: string;
   public codeFiles: CodeFile[] = [];
+  public initialized: boolean;
 
   constructor(
     private sourceCodeDialog: SourceCodeDialogService,
@@ -52,7 +64,12 @@ export class ExampleSourceCodeDialogComponent implements OnInit, AfterViewInit {
     this.sourceCodeDialog.dialogVisible$.subscribe(value => {
       // this.codeToShow = this.sourceCodeDialog.codeToShow;
       this.codeFiles = this.sourceCodeDialog.codefiles;
-      this.display = value;
+      if (this.initialized) {
+        this.display = value;
+      } else {
+        this.display = false;
+        this.initialized = true;
+      }
       // this.editor.reload();
       // this.cdref.detectChanges();
       // this.editor.refresh();
@@ -67,18 +84,12 @@ export class ExampleSourceCodeDialogComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    // if (this.editors) {
-    //   console.log(this.editors);
-    //   setTimeout(
-    //     () => { this.editors.forEach(editor => editor.refresh()); },
-    //     0
-    //   );
-    // }
+
   }
 
   getDialogWidth(): number {
-    // if (this.layoutSwitcher.isMobileLayout()) {
-    //   return 600;
+    // if (!this.layoutSwitcher.isMobileLayout()) {
+    //   return 700;
     // } else {
     //   return undefined;
     // }
@@ -92,5 +103,9 @@ export class ExampleSourceCodeDialogComponent implements OnInit, AfterViewInit {
         }); },
       0
     );
+  }
+
+  onHide() {
+
   }
 }

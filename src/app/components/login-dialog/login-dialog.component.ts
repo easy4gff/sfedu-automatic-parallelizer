@@ -9,6 +9,7 @@ import { LanguageConstants } from '../../model/language/language-constants';
   selector: 'app-login-dialog',
   template: `
     <p-dialog
+      id="login-dialog"
       [(visible)]="visible"
       [header]="labelLogin"
       [width]="600"
