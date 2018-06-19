@@ -39,7 +39,7 @@ app.use(session({
 const passport = require('passport');  
 app.use(passport.initialize());
 app.use(passport.session());
-// app.use(queue({ activeLimit: 1, queuedLimit: -1 }));
+app.use(queue({ activeLimit: 1, queuedLimit: -1 }));
 
 // Angular DIST output folder
 app.use(express.static(path.join(__dirname, '../dist')));
