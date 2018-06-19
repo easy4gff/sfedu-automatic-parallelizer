@@ -20,7 +20,7 @@ module.exports.ParallelizerController = class ParallelizerController {
         return new Buffer(bitmap).toString('base64');
     }
 
-    static parallelize(connection, files, destFolder, optionId, return return outStream) {
+    static parallelize(connection, files, destFolder, optionId, outStream) {
 
         const executionConfiguration = {
             cmdLine: null,
