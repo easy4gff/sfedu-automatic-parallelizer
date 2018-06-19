@@ -6,6 +6,12 @@ const router = express.Router();
 
 const AppFilesystemConstants = require('../parallelizer/filesystem-constants').AppFilesystemConstants;
 const ParallelizingUtils = require('../parallelizing-utils/parallelizing-utils').ParallelizingUtils;
+const reCAPTCHA=require('recaptcha2');
+
+const recaptcha = new reCAPTCHA({
+    siteKey:'6LdpoV8UAAAAACljc9RQwhfXHkzbd_DetUK_QAHg',
+    secretKey:'6LdpoV8UAAAAAEo8vU16Y_5sHBI6h7-wrsuDdb9G'
+  })
 
 var mysql      = require('mysql');
 // var connection = mysql.createConnection({
@@ -242,5 +248,19 @@ router.get('/logout',
         });
     }
 );
+
+function submitForm(req,res){
+    recaptcha.validateRequest(req)
+    .then(function(){
+      // validated and secure
+      res.json({formSubmit:true})
+    })
+    .catch(function(errorCodes){
+      // invalid
+      res.json({formSubmit:false,errors:recaptcha.translateErrors(errorCodes)});// translate error codes to human readable text
+    });
+  }
+
+router.get('/captcha')
 
 module.exports = router;

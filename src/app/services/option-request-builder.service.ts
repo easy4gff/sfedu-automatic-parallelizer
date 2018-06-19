@@ -117,4 +117,10 @@ export class OptionRequestBuilderService {
     return new Blob([byteArray], {type: contentType});
   }
 
+  verifyCaptcha() {
+    // this.http.post('/api/captcha', {
+    //   captchaToken:
+    // });
+  }
+
 }

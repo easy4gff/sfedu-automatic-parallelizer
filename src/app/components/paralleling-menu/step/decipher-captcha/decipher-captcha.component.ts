@@ -14,7 +14,7 @@ import { Message } from 'primeng/primeng';
   selector: 'app-decipher-captcha',
   template: `
     <p-panel [header]="labelConfirm">
-
+      <p-captcha siteKey="6LdpoV8UAAAAACljc9RQwhfXHkzbd_DetUK_QAHg" (onResponse)="showResponse($event)"></p-captcha>
       <!-- <div class="upload-container" style="margin-top: 10px">
         <p-button [label]="labelUpload" (onClick)="sendRequest()"></p-button>
       </div> -->
@@ -22,12 +22,21 @@ import { Message } from 'primeng/primeng';
         <p-progressSpinner *ngIf="loadingStatus"></p-progressSpinner>
       </div>
       <p-messages [(value)]="resultMessages"></p-messages>
-      <app-step-buttons
+      <app-step-buttons *ngIf="!requestSent"
         [prevLink]="prevLink"
         [labelNextStep]="labelUpload"
         (nextClick)="sendRequest()"
       >
       </app-step-buttons>
+      <div class="back-container" *ngIf="resultMessages && resultMessages.length !== 0">
+        <button
+          pButton
+          [label]="toMenu"
+          (click)="redirectToMenu()"
+          style="padding: 0;"
+        >
+        </button>
+      </div>
     </p-panel>
   `,
   styles: [`
@@ -47,6 +56,19 @@ import { Message } from 'primeng/primeng';
       margin: 30px;
     }
 
+    .back-container {
+      text-align: center;
+      margin: 0 auto;
+      float: none;
+      margin-top: 17px;
+    }
+
+    .back-container:after {
+      content: "";
+      display: table;
+      clear: both;
+    }
+
     :host ::ng-deep .ui-messages-detail {
       display: block !important;
     }
@@ -62,6 +84,10 @@ export class DecipherCaptchaComponent implements OnInit, OnDestroy {
   loadingStatus: boolean;
   prevLink: string;
   resultMessages: Message[];
+  requestSent = false;
+  toMenu: string;
+  captchaSolved = false;
+  captchaResponse: any;
 
   constructor(
     private langService: LanguageService,
@@ -86,6 +112,7 @@ export class DecipherCaptchaComponent implements OnInit, OnDestroy {
     this.langService.currentLanguage$.subscribe(() => {
       this.labelUpload = this.langService.get(LanguageConstants.UPLOAD);
       this.labelConfirm = this.langService.get(LanguageConstants.UPLOAD_CONFIRMATION);
+      this.toMenu = this.langService.get(LanguageConstants.BACK_TO_MENU);
     });
 
     this.optionBuilderService.loadingStatus$.subscribe(status => {
@@ -102,6 +129,7 @@ export class DecipherCaptchaComponent implements OnInit, OnDestroy {
   }
 
   sendRequest(): void {
+    this.requestSent = true;
     this.optionBuilderService.sendRequest();
     console.log('sendRequest in component OK');
   }
@@ -118,6 +146,14 @@ export class DecipherCaptchaComponent implements OnInit, OnDestroy {
         this.prevLink = `../${ RoutingConstants.CHOOSE_FILE_FROM_LIBRARY }`;
         break;
     }
+  }
+
+  redirectToMenu() {
+    this.routingService.redirectHome();
+  }
+
+  showResponse(response) {
+    console.log(response);
   }
 
 }
