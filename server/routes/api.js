@@ -79,6 +79,7 @@ router.get('/users', (req, res) => {
 });*/
 
 router.get('/parallelizing-options', (req, res) => {
+    console.log('Request for parallelizing options');
     dao.getAvailableOptions(connection, res);
     // res.send(availableOptions);
 });
